@@ -18,12 +18,12 @@ import javax.swing.JOptionPane;
  *
  * @author aleks
  */
-public class UnosAutomobila extends javax.swing.JDialog {
+public class IzmenaAutomobila extends javax.swing.JDialog {
 Automobil pretrazenAuto;
     /**
      * Creates new form NewJDialog
      */
-    public UnosAutomobila(java.awt.Frame parent, boolean modal) {
+    public IzmenaAutomobila(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         popuniComboTipova();
@@ -52,11 +52,13 @@ Automobil pretrazenAuto;
         lblErrorModel = new javax.swing.JLabel();
         lblTip = new javax.swing.JLabel();
         cmbTip = new javax.swing.JComboBox();
-        btnSacuvaj = new javax.swing.JButton();
+        btnIzmeni = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         lblRegistarskiBroj.setText("Registarski broj:");
+
+        txtRegistarskiBroj.setEditable(false);
 
         lblErrorRegBroj.setForeground(new java.awt.Color(255, 0, 0));
         lblErrorRegBroj.setText("jLabel1");
@@ -75,10 +77,10 @@ Automobil pretrazenAuto;
 
         cmbTip.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        btnSacuvaj.setText("Sacuvaj");
-        btnSacuvaj.addActionListener(new java.awt.event.ActionListener() {
+        btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSacuvajActionPerformed(evt);
+                btnIzmeniActionPerformed(evt);
             }
         });
 
@@ -120,7 +122,7 @@ Automobil pretrazenAuto;
                         .addGap(105, 105, 105))))
             .addGroup(layout.createSequentialGroup()
                 .addGap(130, 130, 130)
-                .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -149,14 +151,14 @@ Automobil pretrazenAuto;
                     .addComponent(lblTip)
                     .addComponent(cmbTip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
-                .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnIzmeni, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
 
         try {
             String regBroj = txtRegistarskiBroj.getText();
@@ -170,13 +172,14 @@ Automobil pretrazenAuto;
             TipAutomobila tip = (TipAutomobila) cmbTip.getSelectedItem();
             Automobil auto = new Automobil(regBroj, model, marka, tip);
 
-            Kontroler.getInstanca().dodajAutomobil(auto);
-            JOptionPane.showMessageDialog(this, "Automobil je uspesno sacuvan!");
+            Kontroler.getInstanca().izmeniAutomobil(regBroj, auto);
+            
+            JOptionPane.showMessageDialog(this, "Automobil je uspesno izmenjen!");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Neuspesan unos automobila!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Neuspesna izmena automobila!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
         }
 
-    }//GEN-LAST:event_btnSacuvajActionPerformed
+    }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,14 +198,18 @@ Automobil pretrazenAuto;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UnosAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IzmenaAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UnosAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IzmenaAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UnosAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IzmenaAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UnosAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(IzmenaAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -211,7 +218,7 @@ Automobil pretrazenAuto;
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UnosAutomobila dialog = new UnosAutomobila(new javax.swing.JFrame(), true);
+                IzmenaAutomobila dialog = new IzmenaAutomobila(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -224,7 +231,7 @@ Automobil pretrazenAuto;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnSacuvaj;
+    private javax.swing.JButton btnIzmeni;
     private javax.swing.JComboBox cmbTip;
     private javax.swing.JLabel lblErrorMarka;
     private javax.swing.JLabel lblErrorModel;

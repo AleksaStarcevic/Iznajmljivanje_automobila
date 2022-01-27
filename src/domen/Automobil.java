@@ -55,8 +55,10 @@ public class Automobil {
 
     @Override
     public String toString() {
-        return registracioniBroj;
+        return "Automobil{" + "registracioniBroj=" + registracioniBroj + ", model=" + model + ", marka=" + marka + ", tip=" + tip + '}';
     }
+
+    
 
     public TipAutomobila getTip() {
         return tip;

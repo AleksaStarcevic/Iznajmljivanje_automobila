@@ -53,6 +53,11 @@ public class MainForm extends javax.swing.JFrame {
         menuAutomobil.add(itemDodajAutomobil);
 
         itemPretraziAutomobil.setText("Pretrazi automobil");
+        itemPretraziAutomobil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemPretraziAutomobilActionPerformed(evt);
+            }
+        });
         menuAutomobil.add(itemPretraziAutomobil);
 
         jMenuBar1.add(menuAutomobil);
@@ -127,9 +132,12 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_itemTabelaPotvrdaActionPerformed
 
     private void itemDodajAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemDodajAutomobilActionPerformed
-       UnosAutomobila ua = new UnosAutomobila();
-       ua.setVisible(true);
+      new UnosAutomobila(this, rootPaneCheckingEnabled).setVisible(true);
     }//GEN-LAST:event_itemDodajAutomobilActionPerformed
+
+    private void itemPretraziAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPretraziAutomobilActionPerformed
+       new PretragaAutomobila().setVisible(true);
+    }//GEN-LAST:event_itemPretraziAutomobilActionPerformed
 
     /**
      * @param args the command line arguments

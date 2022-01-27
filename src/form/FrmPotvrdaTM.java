@@ -9,7 +9,7 @@ import controller.Kontroler;
 import domen.Automobil;
 import domen.PotvrdaOIznajmljivanju;
 import domen.Vozac;
-import from.components.TableModelPotvrde;
+import tableModel.TableModelPotvrde;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;

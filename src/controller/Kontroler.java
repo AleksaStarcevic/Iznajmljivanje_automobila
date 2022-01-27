@@ -13,6 +13,8 @@ import domen.Vozac;
 import exception.ValidacijaException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import repository.db.RepositoryAutomobil;
 import repository.db.RepositoryKorisnik;
 import repository.db.RepositoryPotvrda;
@@ -70,13 +72,13 @@ public class Kontroler {
         }
 
     }
-    
-    public void dodajAutomobil(Automobil a) throws Exception{
+
+    public void dodajAutomobil(Automobil a) throws Exception {
         storageAutomobil.connect();
-        
+
         try {
             if (!(storageAutomobil.getAutomobili().contains(a))) {
-                
+
                 storageAutomobil.kreirajAutomobil(a);
                 storageAutomobil.commit();
             } else {
@@ -91,6 +93,24 @@ public class Kontroler {
 
     }
 
+    public void obrisiAutomobil(String registracioniBroj) throws Exception {
+        try {
+            storageAutomobil.connect();
+            storageAutomobil.obrisiAutomobil(registracioniBroj);
+            storageAutomobil.commit();
+            throw new Exception("Uspesno brisanje automobila!");
+        } catch (SQLException ex) {
+            storageAutomobil.rollback();
+            throw new Exception("Neuspesno brisanje automobila!");
+        } finally {
+            storageAutomobil.disconnect();
+        }
+    }
+
+    public void izmeniAutomobil(String regBroj, Automobil a) throws SQLException {
+        storageAutomobil.izmeniAutomobil(regBroj, a);
+    }
+
     public List<Automobil> getStorageAutomobili() throws SQLException {
         return storageAutomobil.getAutomobili();
     }
@@ -98,12 +118,14 @@ public class Kontroler {
     public List<Vozac> getStorageVozac() throws SQLException {
         return storageVozac.getVozaci();
     }
-    
-     public List<TipAutomobila> getStorageTipovi() throws SQLException {
+
+    public List<TipAutomobila> getStorageTipovi() throws SQLException {
         return storageTipovi.vratiTipoveAutomobila();
     }
-    
-    
+
+    public Automobil getAutomobilByRegBroj(String RegBroj) throws SQLException, ValidacijaException {
+        return storageAutomobil.getAutomobilByRegBroj(RegBroj);
+    }
 
     public void dodaj(PotvrdaOIznajmljivanju potvrda) throws Exception {
         storagePotvrda.connect();
@@ -135,8 +157,6 @@ public class Kontroler {
             storagePotvrda.disconnect();
         }
     }
-    
-   
 
     public List<PotvrdaOIznajmljivanju> getPotvrde() throws SQLException {
         return storagePotvrda.getSvePotvrde();
