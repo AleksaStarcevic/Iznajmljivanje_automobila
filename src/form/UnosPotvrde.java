@@ -13,12 +13,15 @@ import domen.Vozac;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import tableModel.TableModelPotvrde;
 
 /**
  *
@@ -32,12 +35,8 @@ public class UnosPotvrde extends javax.swing.JDialog {
     public UnosPotvrde(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        prepareView();
         
-        try {
-            prepareView();
-        } catch (SQLException ex) {
-            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -66,6 +65,13 @@ public class UnosPotvrde extends javax.swing.JDialog {
         lblErrorCena = new javax.swing.JLabel();
         datumOD = new datechooser.beans.DateChooserCombo();
         datumDO = new datechooser.beans.DateChooserCombo();
+        jLabel7 = new javax.swing.JLabel();
+        txtPretrazi = new javax.swing.JTextField();
+        btnIzmeni = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblPotvrde = new javax.swing.JTable();
+        btnPretraga = new javax.swing.JButton();
+        lblErrorPretraga = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -84,6 +90,12 @@ public class UnosPotvrde extends javax.swing.JDialog {
         cmbRegistracioniBroj.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         cmbVozac.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        txtCena.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCenaActionPerformed(evt);
+            }
+        });
 
         btnSacuvaj.setText("Sacuvaj");
         btnSacuvaj.addActionListener(new java.awt.event.ActionListener() {
@@ -110,80 +122,135 @@ public class UnosPotvrde extends javax.swing.JDialog {
         datumDO.setWeekStyle(datechooser.view.WeekDaysStyle.SHORT);
         datumDO.setLocale(new java.util.Locale("sr", "", ""));
 
+        jLabel7.setText("Pretrazi potvrdu(po id):");
+
+        btnIzmeni.setText("Izmeni potvrdu");
+
+        tblPotvrde.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblPotvrde);
+
+        btnPretraga.setText("Pretrazi");
+        btnPretraga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPretragaActionPerformed(evt);
+            }
+        });
+
+        lblErrorPretraga.setForeground(new java.awt.Color(255, 51, 51));
+        lblErrorPretraga.setText("jLabel8");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblErrorDatumDo, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(jLabel1)
+                    .addComponent(lblErrorID)
+                    .addComponent(lblErrorDatumOd)
+                    .addComponent(lblErrorCena))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(jLabel1)
-                            .addComponent(lblErrorID)
-                            .addComponent(lblErrorDatumOd)
-                            .addComponent(lblErrorCena)
-                            .addComponent(lblErrorDatumDo))
                         .addGap(104, 104, 104)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtID, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(cmbRegistracioniBroj, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbVozac, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtCena)
-                            .addComponent(datumOD, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
-                            .addComponent(datumDO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(datumDO, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                            .addComponent(datumOD, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbVozac, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbRegistracioniBroj, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtID, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSacuvaj)
-                        .addGap(47, 47, 47)))
-                .addGap(33, 33, 33))
+                        .addGap(124, 124, 124)
+                        .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(44, 44, 44)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtPretrazi, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnPretraga))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 493, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblErrorPretraga))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnIzmeni)))
+                .addContainerGap(434, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblErrorID, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(cmbRegistracioniBroj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(cmbVozac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblErrorDatumOd, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(datumOD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(datumDO, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblErrorDatumDo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGap(18, 18, 18)
-                .addComponent(lblErrorCena)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
-                .addComponent(btnSacuvaj)
-                .addGap(20, 20, 20))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblErrorID, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbRegistracioniBroj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(cmbVozac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblErrorDatumOd, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(datumOD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(datumDO, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblErrorDatumDo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtCena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(lblErrorCena))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(txtPretrazi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPretraga))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnIzmeni)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblErrorPretraga)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         pack();
@@ -217,6 +284,31 @@ public class UnosPotvrde extends javax.swing.JDialog {
         }
 
     }//GEN-LAST:event_btnSacuvajActionPerformed
+
+    private void txtCenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCenaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCenaActionPerformed
+
+    private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
+        lblErrorPretraga.setVisible(false);
+        if(txtPretrazi.getText().isEmpty()){
+            lblErrorPretraga.setVisible(true);
+            lblErrorPretraga.setText("Unesi ID za pretragu");
+            return;
+        }
+        
+        
+        try {
+            int id = Integer.parseInt(txtPretrazi.getText());
+           PotvrdaOIznajmljivanju potvrda = Kontroler.getInstanca().getPotvrdaByID(id);
+            System.out.println(potvrda);
+            prikaziPotvrdu(potvrda);
+             JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
+        } catch (Exception ex) {
+             JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+             popuniTabelu();
+        }
+    }//GEN-LAST:event_btnPretragaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -261,6 +353,8 @@ public class UnosPotvrde extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnIzmeni;
+    private javax.swing.JButton btnPretraga;
     private javax.swing.JButton btnSacuvaj;
     private javax.swing.JComboBox cmbRegistracioniBroj;
     private javax.swing.JComboBox cmbVozac;
@@ -272,21 +366,33 @@ public class UnosPotvrde extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblErrorCena;
     private javax.swing.JLabel lblErrorDatumDo;
     private javax.swing.JLabel lblErrorDatumOd;
     private javax.swing.JLabel lblErrorID;
+    private javax.swing.JLabel lblErrorPretraga;
+    private javax.swing.JTable tblPotvrde;
     private javax.swing.JTextField txtCena;
     private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtPretrazi;
     // End of variables declaration//GEN-END:variables
 
-    private void prepareView() throws SQLException {
-       lblErrorID.setVisible(false);
-        lblErrorCena.setVisible(false);
-        lblErrorDatumDo.setVisible(false);
-        lblErrorDatumOd.setVisible(false);
-        popuniCmbAutomobili();
-        popuniCmbVozaci();
+    private void prepareView()  {
+        try {
+            lblErrorPretraga.setVisible(false);
+            lblErrorID.setVisible(false);
+            lblErrorCena.setVisible(false);
+            lblErrorDatumDo.setVisible(false);
+            lblErrorDatumOd.setVisible(false);
+            popuniCmbAutomobili();
+            popuniCmbVozaci();
+            popuniTabelu();
+        } catch (SQLException ex) {
+            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     private void popuniCmbAutomobili() throws SQLException {
@@ -307,37 +413,7 @@ public class UnosPotvrde extends javax.swing.JDialog {
         }
     }
 
-//    private void validacija() throws Exception {
-//        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-//        String errorMessage = "";
-//        if (txtID.getText().isEmpty()) {
-//            errorMessage += "ID ne sme biti prazan!\n";
-//        }
-//        if (txtDatumDo.getText().isEmpty() || txtDatumOd.getText().isEmpty()) {
-//            errorMessage += "Datum ne sme biti prazan!\n";
-//        }
-//        double cena = Double.parseDouble(txtCena.getText());
-//        if (cena < 0 || txtCena.getText().isEmpty()) {
-//            errorMessage += "Cena ne sme biti prazna i mora biti >0!\n";
-//        }
-//        
-//        try {
-//            Date datumOD = sdf.parse(txtDatumOd.getText());
-//            Date datumDO = sdf.parse(txtDatumDo.getText());
-//
-//            if (datumOD.before(new Date()) || datumDO.before(new Date())) {
-//                errorMessage += "Datum mora biti tekuci!\n";
-//            }
-//
-//        } catch (Exception e) {
-//            errorMessage += "Datum mora biti u formatu dd.MM.yyyy !\n";
-//        }
-//
-//        if (!errorMessage.isEmpty()) {
-//            throw new Exception(errorMessage);
-//        }
 
-//    }
     
   public boolean validacija(){
        lblErrorID.setVisible(false);
@@ -382,6 +458,26 @@ public class UnosPotvrde extends javax.swing.JDialog {
          
          
          return prazno;
+    }
+  
+  
+    
+    private void popuniTabelu()  {
+        try {
+            List<PotvrdaOIznajmljivanju> potvrde = Kontroler.getInstanca().getPotvrde();
+            TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
+            tblPotvrde.setModel(tmp);
+        } catch (SQLException ex) {
+            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
+    }
+
+    private void prikaziPotvrdu(PotvrdaOIznajmljivanju potvrda) {
+         List<PotvrdaOIznajmljivanju> potvrde = new ArrayList<>();
+         potvrde.add(potvrda);
+        TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
+        tblPotvrde.setModel(tmp);
     }
 
 }

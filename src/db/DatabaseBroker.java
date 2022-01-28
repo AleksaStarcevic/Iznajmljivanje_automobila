@@ -311,6 +311,61 @@ public class DatabaseBroker {
          return potvrde;
     }
     
+     public PotvrdaOIznajmljivanju vratiPotvrduByID(int ID) throws SQLException{
+            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
+        try {
+            String upit = "SELECT * FROM potvrdaoiznajmljivanju p JOIN automobil a ON p.automobil = a.registracioniBroj JOIN vozac v ON p.vozac = v.vozacID JOIN korisnik k ON p.korisnik=k.korisnikID JOIN tipautomobila t ON a.tip=t.tipID WHERE p.potvrdaID="+ID;
+            Statement statement = connection.createStatement();
+          ResultSet rs =  statement.executeQuery(upit);
+          
+          while(rs.next()){
+              
+              potvrda.setPotvrdaID(rs.getInt("potvrdaID"));
+              potvrda.setDatumOD(rs.getDate("datumOD"));
+              potvrda.setDatumDO(rs.getDate("datumDO"));
+              potvrda.setCena(rs.getDouble("cena"));
+              
+              TipAutomobila tip = new TipAutomobila();
+              tip.setTipID(rs.getInt("tipID"));
+              tip.setNazivTipa(rs.getString("nazivTipa"));
+              
+              Automobil automobil = new Automobil();
+              automobil.setRegistracioniBroj(rs.getString("automobil"));
+              automobil.setModel(rs.getString("model"));
+              automobil.setMarka(rs.getString("marka"));
+              automobil.setTip(tip);
+              
+              Korisnik korisnik = new Korisnik();
+              korisnik.setKorisnikID(rs.getInt("korisnikID"));
+              korisnik.setKorisnickoIme(rs.getString("korisnickoIme"));
+              korisnik.setSifra(rs.getString("sifra"));
+              
+              Vozac vozac = new Vozac();
+              vozac.setVozacID(rs.getInt("vozacID"));
+              vozac.setIme(rs.getString("ime"));
+              vozac.setPrezime(rs.getString("prezime"));
+              vozac.setEmail(rs.getString("email"));
+              vozac.setAdresa(rs.getString("adresa"));
+              
+              potvrda.setAutomobil(automobil);
+              potvrda.setVozac(vozac);
+              potvrda.setKorisnik(korisnik);
+              
+              
+              
+              
+          }
+           rs.close();
+           statement.close();
+           System.out.println("Uspesno ucitavanje potvrda!");
+        } catch (SQLException ex) {
+            System.out.println("Neuspesno ucitavanje potvrda!");
+            throw ex;
+        }
+         return potvrda;
+    }
+    
+    
     
      public void sacuvajListuPotvrda(List<PotvrdaOIznajmljivanju> potvrde) throws SQLException {
         try {

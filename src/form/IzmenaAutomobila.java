@@ -174,9 +174,9 @@ Automobil pretrazenAuto;
 
             Kontroler.getInstanca().izmeniAutomobil(regBroj, auto);
             
-            JOptionPane.showMessageDialog(this, "Automobil je uspesno izmenjen!");
+            
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Neuspesna izmena automobila!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
 
     }//GEN-LAST:event_btnIzmeniActionPerformed

@@ -77,18 +77,19 @@ public class RepositoryAutomobil extends DbRepository {
 
     public void izmeniAutomobil(String registracioniBroj, Automobil a) throws SQLException {
         try {
-            System.out.println(a+"heheheh");
-            String upit = "UPDATE automobil SET model=?,marka=?,tip=? WHERE registracioniBroj='"+registracioniBroj+"'";
+           
+            String upit = "UPDATE automobil SET model=?,marka=?,tip=? WHERE registracioniBroj=?";
             connection = DbConnectionFactory.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(upit);
 
-//            statement.setString(4, registracioniBroj);
+            statement.setString(4, registracioniBroj);
             statement.setString(1, a.getModel());
             statement.setString(2, a.getMarka());
             statement.setInt(3, a.getTip().getTipID());
 
             statement.executeUpdate();
             System.out.println("Uspesno promenjen automobil!");
+            
         } catch (SQLException ex) {
             System.out.println("Neuspesno promenjen automobil!");
             throw ex;
@@ -112,7 +113,7 @@ public class RepositoryAutomobil extends DbRepository {
 
     }
 
-    public Automobil getAutomobilByRegBroj(String RegBroj) throws SQLException, ValidacijaException {
+    public Automobil getAutomobilByRegBroj(String RegBroj) throws SQLException {
         try {
             Automobil automobil = new Automobil();
 
@@ -131,10 +132,6 @@ public class RepositoryAutomobil extends DbRepository {
 
             rs.close();
             statement.close();
-
-            if (automobil.getRegistracioniBroj() == null) {
-                throw new ValidacijaException("Automobil sa registracionim brojem " + RegBroj + " ne postoji u sistemu!");
-            }
             return automobil;
         } catch (SQLException ex) {
             System.out.println("Neuspesno vraceni automobili!");

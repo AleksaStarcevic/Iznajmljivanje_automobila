@@ -109,10 +109,10 @@ public class TableModelPotvrde extends AbstractTableModel {
         
     }
     
-    @Override
-    public boolean isCellEditable(int i, int i1) {
-        return true;
-    }
+//    @Override
+//    public boolean isCellEditable(int i, int i1) {
+//        return true;
+//    }
     
     public void dodajUTabelu(PotvrdaOIznajmljivanju potvrda) {
         potvrde.add(potvrda);

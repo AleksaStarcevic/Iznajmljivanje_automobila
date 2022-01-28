@@ -49,6 +49,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
         btnPretraga = new javax.swing.JButton();
         btnIzmeni = new javax.swing.JButton();
         btnObrisi = new javax.swing.JButton();
+        lblErrorPretraga = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -88,6 +89,9 @@ public class PretragaAutomobila extends javax.swing.JFrame {
             }
         });
 
+        lblErrorPretraga.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorPretraga.setText("jLabel2");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,7 +107,8 @@ public class PretragaAutomobila extends javax.swing.JFrame {
                                 .addGap(35, 35, 35)
                                 .addComponent(txtPretraga, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnPretraga))))
+                                .addComponent(btnPretraga))
+                            .addComponent(lblErrorPretraga)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(btnIzmeni)
@@ -119,13 +124,15 @@ public class PretragaAutomobila extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(txtPretraga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPretraga))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblErrorPretraga)
+                .addGap(4, 4, 4)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnIzmeni)
                     .addComponent(btnObrisi))
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         pack();
@@ -139,12 +146,9 @@ public class PretragaAutomobila extends javax.swing.JFrame {
             System.out.println(pretrazenAuto);
             refreshTable(pretrazenAuto);
 
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Neuspsena pretraga!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-        } catch (ValidacijaException ve) {
-            JOptionPane.showMessageDialog(this, "Sistem ne moze da pronadje automobil!\n" + ve.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
             prepareTable();
-
         }
     }//GEN-LAST:event_btnPretragaActionPerformed
 
@@ -154,7 +158,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
             IzmenaAutomobila izm = new IzmenaAutomobila(this, rootPaneCheckingEnabled);
             izm.setPretrazenAuto(pretrazenAuto);
             izm.setVisible(true);
-            //resetuj tabelu
+            //osvezi tabelu
             prepareTable();
 
         }
@@ -167,10 +171,9 @@ public class PretragaAutomobila extends javax.swing.JFrame {
                 String registracioniBroj = txtPretraga.getText();
                 Kontroler.getInstanca().obrisiAutomobil(registracioniBroj);
 
-               
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
-                 prepareTable();
+                prepareTable();
             }
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
@@ -219,6 +222,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     private javax.swing.JButton btnPretraga;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblErrorPretraga;
     private javax.swing.JTable tblAutomobili;
     private javax.swing.JTextField txtPretraga;
     // End of variables declaration//GEN-END:variables
