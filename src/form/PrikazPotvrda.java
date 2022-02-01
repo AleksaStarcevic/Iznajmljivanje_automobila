@@ -128,12 +128,18 @@ public class PrikazPotvrda extends javax.swing.JDialog {
     }
     
     private void popuniTabelu() throws SQLException {
-        List<PotvrdaOIznajmljivanju> potvrde = Kontroler.getInstanca().getPotvrde();
-        DefaultTableModel model = (DefaultTableModel) tblPotvrde.getModel();
+        List<PotvrdaOIznajmljivanju> potvrde;
+        try {
+            potvrde = Kontroler.getInstanca().getPotvrde();
+            DefaultTableModel model = (DefaultTableModel) tblPotvrde.getModel();
         for (PotvrdaOIznajmljivanju potvrda : potvrde) {
             Object rowData[] = {potvrda.getVozac(), potvrda.getAutomobil(), potvrda.getDatumOD(), potvrda.getDatumDO()};
             model.addRow(rowData);
             
         }
+        } catch (Exception ex) {
+            Logger.getLogger(PrikazPotvrda.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 }

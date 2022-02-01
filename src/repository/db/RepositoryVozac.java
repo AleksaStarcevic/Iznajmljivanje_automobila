@@ -7,6 +7,7 @@ package repository.db;
 
 import domen.Vozac;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,6 +28,28 @@ public class RepositoryVozac extends DbRepository{
 //        vozaci.add(new Vozac(2, "Nikola", "Cvet", "nik7@gmail.com", "Gige"));
 //        vozaci.add(new Vozac(3, "Aleksa", "Visnja", "visn3@gmail.com", "Medak"));
     }
+    
+     public void kreirajVozaca(Vozac v) throws SQLException {
+        try {
+            String upit = "INSERT INTO vozac(vozacID,ime,prezime,email,adresa) VALUES(?,?,?,?,?)";
+             connection = DbConnectionFactory.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(upit);
+
+            statement.setInt(1, v.getVozacID());
+            statement.setString(2, v.getIme());
+            statement.setString(3, v.getPrezime());
+            statement.setString(4, v.getEmail());
+            statement.setString(5, v.getAdresa());
+
+            statement.executeUpdate();
+            System.out.println("Uspesno kreiran vozac!");
+        } catch (SQLException ex) {
+            System.out.println("Neuspesno kreiran vozac!");
+            throw ex;
+        }
+    }
+    
+    
 
     public List<Vozac> getVozaci() throws SQLException {
          try {
@@ -45,6 +68,26 @@ public class RepositoryVozac extends DbRepository{
             return vozaci;
         } catch (SQLException ex) {
             System.out.println("Neuspesno vraceni vozaci!");
+            throw ex;
+        }
+    }
+    
+     public void izmeniVozaca(int id,Vozac v) throws SQLException {
+        try {
+            String upit = "UPDATE vozac SET ime=?,prezime=?,email=?,adresa=? WHERE vozacID=?";
+            connection = DbConnectionFactory.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(upit);
+            
+            statement.setInt(5, id);
+            statement.setString(1, v.getIme());
+            statement.setString(2, v.getPrezime());
+            statement.setString(3, v.getEmail());
+            statement.setString(4, v.getAdresa());
+            
+            statement.executeUpdate();
+            System.out.println("Uspesno promenjen vozac!");
+        } catch (SQLException ex) {
+            System.out.println("Neuspesno promenjen vozac!");
             throw ex;
         }
     }

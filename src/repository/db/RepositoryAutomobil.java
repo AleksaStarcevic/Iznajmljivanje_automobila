@@ -68,6 +68,8 @@ public class RepositoryAutomobil extends DbRepository {
             statement.setInt(4, automobil.getTip().getTipID());
 
             statement.executeUpdate();
+
+            statement.close();
             System.out.println("Uspesno kreiran automobil!");
         } catch (SQLException ex) {
             System.out.println("Neuspesno kreiran automobil!");
@@ -77,7 +79,7 @@ public class RepositoryAutomobil extends DbRepository {
 
     public void izmeniAutomobil(String registracioniBroj, Automobil a) throws SQLException {
         try {
-           
+
             String upit = "UPDATE automobil SET model=?,marka=?,tip=? WHERE registracioniBroj=?";
             connection = DbConnectionFactory.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement(upit);
@@ -88,8 +90,10 @@ public class RepositoryAutomobil extends DbRepository {
             statement.setInt(3, a.getTip().getTipID());
 
             statement.executeUpdate();
+
+            statement.close();
             System.out.println("Uspesno promenjen automobil!");
-            
+
         } catch (SQLException ex) {
             System.out.println("Neuspesno promenjen automobil!");
             throw ex;
@@ -105,7 +109,8 @@ public class RepositoryAutomobil extends DbRepository {
 
             statement.setString(1, registracioniBroj);
             statement.executeUpdate();
-            
+            statement.close();
+
         } catch (SQLException ex) {
             System.out.println("Neuspesno obrisan automobil!");
             throw ex;

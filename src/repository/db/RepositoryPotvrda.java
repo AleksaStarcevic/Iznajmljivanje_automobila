@@ -192,5 +192,31 @@ public class RepositoryPotvrda extends DbRepository {
         }
          return potvrda;
     }
+     
+     public void izmeniPotvrdu(PotvrdaOIznajmljivanju potvrda) throws SQLException {
+        try {
+            String upit = "UPDATE potvrdaoiznajmljivanju SET datumOD=?,datumDO=?,cena=?,automobil=?,vozac=?,korisnik=? WHERE potvrdaID=?";
+            connection = DbConnectionFactory.getInstance().getConnection();
+            PreparedStatement statement = connection.prepareStatement(upit);
+
+            
+            statement.setDate(1, new Date(potvrda.getDatumOD().getTime()));
+            statement.setDate(2, new Date(potvrda.getDatumDO().getTime()));
+            statement.setDouble(3, potvrda.getCena());
+            statement.setString(4, potvrda.getAutomobil().getRegistracioniBroj());
+            statement.setInt(5, potvrda.getVozac().getVozacID());
+            statement.setInt(6, potvrda.getKorisnik().getKorisnikID());
+            statement.setInt(7, potvrda.getPotvrdaID());
+
+            statement.executeUpdate();
+            
+           statement.close();
+            System.out.println("Uspesno izmenjena potvrda!");
+        } catch (SQLException ex) {
+            System.out.println("Neuspesna izmena potvrde!");
+            throw ex;
+        }
+
+    }
 
 }

@@ -65,6 +65,11 @@ public class MainForm extends javax.swing.JFrame {
         menuVozac.setText("Vozac");
 
         jMenuItem1.setText("Dodaj novog vozaca");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         menuVozac.add(jMenuItem1);
 
         jMenuItem2.setText("Pretrazi vozaca");
@@ -120,7 +125,7 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void itemPotvrdaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPotvrdaActionPerformed
-        new UnosPotvrde(this, true).setVisible(true);
+        new UnosPotvrde().setVisible(true);
     }//GEN-LAST:event_itemPotvrdaActionPerformed
 
     private void itemPrikazActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPrikazActionPerformed
@@ -138,6 +143,10 @@ public class MainForm extends javax.swing.JFrame {
     private void itemPretraziAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPretraziAutomobilActionPerformed
        new PretragaAutomobila().setVisible(true);
     }//GEN-LAST:event_itemPretraziAutomobilActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       new UnosVozaca().setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments

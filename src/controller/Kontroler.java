@@ -136,17 +136,17 @@ public class Kontroler {
     public Automobil getAutomobilByRegBroj(String RegBroj) throws Exception {
         Automobil auto = new Automobil();
         try {
-           
+
             storageAutomobil.connect();
             auto = storageAutomobil.getAutomobilByRegBroj(RegBroj);
             if (auto.getRegistracioniBroj() == null) {
                 throw new Exception("Automobil sa registracionim brojem " + RegBroj + " ne postoji u sistemu!");
             }
-             storageAutomobil.commit();
+            storageAutomobil.commit();
         } catch (SQLException ex) {
-           storageAutomobil.rollback();
-           throw new Exception("Neuspesna pretraga automobila!");
-        }finally {
+            storageAutomobil.rollback();
+            throw new Exception("Neuspesna pretraga automobila!");
+        } finally {
             storageAutomobil.disconnect();
         }
 
@@ -176,37 +176,66 @@ public class Kontroler {
         try {
             storagePotvrda.dodajSvePotvrde(potvrde);
             storagePotvrda.commit();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             storagePotvrda.rollback();
             throw e;
         } finally {
             storagePotvrda.disconnect();
         }
     }
-    
+
     public PotvrdaOIznajmljivanju getPotvrdaByID(int id) throws Exception {
-            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
+        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
         try {
             storagePotvrda.connect();
             potvrda = storagePotvrda.vratiPotvrduByID(id);
-            if(potvrda.getPotvrdaID() == 0){
-                throw new Exception("Potvrda sa ID:"+id+" ne postoji u sistemu");
+            if (potvrda.getPotvrdaID() == 0) {
+                throw new Exception("Potvrda sa ID:" + id + " ne postoji u sistemu");
             }
             storagePotvrda.commit();
         } catch (SQLException ex) {
             throw ex;
-        }finally{
+        } finally {
             storagePotvrda.disconnect();
         }
         return potvrda;
     }
-    
 
-    public List<PotvrdaOIznajmljivanju> getPotvrde() throws SQLException {
+    public void izmeniPotvrdu(PotvrdaOIznajmljivanju potvrda) throws Exception {
+        try {
+            storagePotvrda.connect();
+            storagePotvrda.izmeniPotvrdu(potvrda);
+            storagePotvrda.commit();
+            throw new Exception("Uspesno izmenjena potvrda!");
+        } catch (SQLException ex) {
+            storagePotvrda.rollback();
+            throw new Exception("Neuspesna izmena potvrde!");
+        } finally {
+            storagePotvrda.disconnect();
+        }
+    }
+
+    public List<PotvrdaOIznajmljivanju> getPotvrde() throws Exception {
         return storagePotvrda.getSvePotvrde();
     }
-    
-    
+
+    public void dodajVozaca(Vozac v) throws Exception {
+        try {
+            storageVozac.connect();
+            if (!storageVozac.getVozaci().contains(v)) {
+                storageVozac.kreirajVozaca(v);
+                storageVozac.commit();
+               
+            } else {
+                throw new Exception("Vozac vec sa id:" + v.getVozacID() + " vec postoji u sistemu!");
+            }
+        } catch (Exception ex) {
+            storageVozac.rollback();
+            throw ex;
+        } finally {
+            storagePotvrda.disconnect();
+        }
+    }
 
     public void setUlogovaniKorisnik(Korisnik ulogovaniKorisnik) {
         this.ulogovaniKorisnik = ulogovaniKorisnik;

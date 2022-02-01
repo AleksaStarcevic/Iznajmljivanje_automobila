@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tableModel.TableModelPotvrde;
@@ -27,16 +28,16 @@ import tableModel.TableModelPotvrde;
  *
  * @author aleks
  */
-public class UnosPotvrde extends javax.swing.JDialog {
+public class UnosPotvrde extends javax.swing.JFrame {
 
     /**
      * Creates new form UnosPotvrde
      */
-    public UnosPotvrde(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public UnosPotvrde() {
+
         initComponents();
         prepareView();
-        
+
     }
 
     /**
@@ -63,8 +64,6 @@ public class UnosPotvrde extends javax.swing.JDialog {
         lblErrorDatumOd = new javax.swing.JLabel();
         lblErrorDatumDo = new javax.swing.JLabel();
         lblErrorCena = new javax.swing.JLabel();
-        datumOD = new datechooser.beans.DateChooserCombo();
-        datumDO = new datechooser.beans.DateChooserCombo();
         jLabel7 = new javax.swing.JLabel();
         txtPretrazi = new javax.swing.JTextField();
         btnIzmeni = new javax.swing.JButton();
@@ -72,6 +71,8 @@ public class UnosPotvrde extends javax.swing.JDialog {
         tblPotvrde = new javax.swing.JTable();
         btnPretraga = new javax.swing.JButton();
         lblErrorPretraga = new javax.swing.JLabel();
+        datumOD = new com.toedter.calendar.JDateChooser();
+        datumDO = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -116,15 +117,14 @@ public class UnosPotvrde extends javax.swing.JDialog {
         lblErrorCena.setForeground(new java.awt.Color(255, 0, 0));
         lblErrorCena.setText("jLabel10");
 
-        datumOD.setWeekStyle(datechooser.view.WeekDaysStyle.SHORT);
-        datumOD.setLocale(new java.util.Locale("sr", "", ""));
-
-        datumDO.setWeekStyle(datechooser.view.WeekDaysStyle.SHORT);
-        datumDO.setLocale(new java.util.Locale("sr", "", ""));
-
         jLabel7.setText("Pretrazi potvrdu(po id):");
 
         btnIzmeni.setText("Izmeni potvrdu");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
 
         tblPotvrde.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -166,17 +166,17 @@ public class UnosPotvrde extends javax.swing.JDialog {
                     .addComponent(lblErrorCena))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(124, 124, 124)
+                        .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(104, 104, 104)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(datumDO, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-                            .addComponent(datumOD, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbVozac, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbRegistracioniBroj, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtID, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtCena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(124, 124, 124)
-                        .addComponent(btnSacuvaj, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtCena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(datumOD, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                            .addComponent(datumDO, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -220,13 +220,13 @@ public class UnosPotvrde extends javax.swing.JDialog {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblErrorDatumOd, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel5))
+                                .addComponent(jLabel5)
+                                .addGap(10, 10, 10)
+                                .addComponent(lblErrorDatumDo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(datumOD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(datumDO, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblErrorDatumDo, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(datumDO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -255,60 +255,7 @@ public class UnosPotvrde extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
-        
-        if(validacija()){
-            return;
-        }
-        
-
-        int id = Integer.parseInt(txtID.getText());
-        Automobil auto = (Automobil) cmbRegistracioniBroj.getSelectedItem();
-        Vozac vozac = (Vozac) cmbVozac.getSelectedItem();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        Date datumOd = datumOD.getSelectedDate().getTime();
-        Date datumDo = datumDO.getSelectedDate().getTime();
-        double cena = Double.parseDouble(txtCena.getText());
-
-        try {
-            Korisnik korisnik = Kontroler.getInstanca().getUlogovaniKorisnik();
-            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
-            System.out.println(potvrda);
-            Kontroler.getInstanca().dodaj(potvrda);
-            JOptionPane.showMessageDialog(this, "Potvrda je uspesno sacuvana!");
-            System.out.println(Kontroler.getInstanca().getPotvrde());
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Neuspesan unos potvrde!\n" + e.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-        }
-
-    }//GEN-LAST:event_btnSacuvajActionPerformed
-
-    private void txtCenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCenaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCenaActionPerformed
-
-    private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
-        lblErrorPretraga.setVisible(false);
-        if(txtPretrazi.getText().isEmpty()){
-            lblErrorPretraga.setVisible(true);
-            lblErrorPretraga.setText("Unesi ID za pretragu");
-            return;
-        }
-        
-        
-        try {
-            int id = Integer.parseInt(txtPretrazi.getText());
-           PotvrdaOIznajmljivanju potvrda = Kontroler.getInstanca().getPotvrdaByID(id);
-            System.out.println(potvrda);
-            prikaziPotvrdu(potvrda);
-             JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
-        } catch (Exception ex) {
-             JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-             popuniTabelu();
-        }
-    }//GEN-LAST:event_btnPretragaActionPerformed
+    PotvrdaOIznajmljivanju potvrdaPretrazena;
 
     /**
      * @param args the command line arguments
@@ -327,30 +274,93 @@ public class UnosPotvrde extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UnosPotvrde.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UnosPotvrde.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UnosPotvrde.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UnosPotvrde.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the dialog */
+        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                UnosPotvrde dialog = new UnosPotvrde(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
+                new UnosPotvrde().setVisible(true);
             }
         });
     }
+    private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
+
+        if (validacija()) {
+            return;
+        }
+
+        int id = Integer.parseInt(txtID.getText());
+        Automobil auto = (Automobil) cmbRegistracioniBroj.getSelectedItem();
+        Vozac vozac = (Vozac) cmbVozac.getSelectedItem();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        Date datumOd = datumOD.getDate();
+        Date datumDo = datumDO.getDate();
+        double cena = Double.parseDouble(txtCena.getText());
+
+        try {
+//            Korisnik korisnik = Kontroler.getInstanca().getUlogovaniKorisnik();
+            Korisnik korisnik = new Korisnik(2, "akile", "123");
+            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
+            System.out.println(potvrda);
+            Kontroler.getInstanca().dodaj(potvrda);
+            JOptionPane.showMessageDialog(this, "Potvrda je uspesno sacuvana!");
+            System.out.println(Kontroler.getInstanca().getPotvrde());
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Neuspesan unos potvrde!\n" + e.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            
+        }
+        popuniTabelu();
+
+    }//GEN-LAST:event_btnSacuvajActionPerformed
+
+    private void txtCenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCenaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCenaActionPerformed
+
+    private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
+        lblErrorPretraga.setVisible(false);
+        if (txtPretrazi.getText().isEmpty()) {
+            lblErrorPretraga.setVisible(true);
+            lblErrorPretraga.setText("Unesi ID za pretragu");
+            popuniTabelu();
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(txtPretrazi.getText());
+            potvrdaPretrazena = Kontroler.getInstanca().getPotvrdaByID(id);
+            System.out.println(potvrdaPretrazena);
+            prikaziPotvrdu(potvrdaPretrazena);
+            JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            popuniTabelu();
+        }
+    }//GEN-LAST:event_btnPretragaActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        if (potvrdaPretrazena != null) {
+
+            IzmenaPotvrde izmena = new IzmenaPotvrde(this, true);
+            izmena.setPotvrda(potvrdaPretrazena);
+            izmena.setVisible(true);
+           
+        }
+
+    }//GEN-LAST:event_btnIzmeniActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIzmeni;
@@ -358,8 +368,8 @@ public class UnosPotvrde extends javax.swing.JDialog {
     private javax.swing.JButton btnSacuvaj;
     private javax.swing.JComboBox cmbRegistracioniBroj;
     private javax.swing.JComboBox cmbVozac;
-    private datechooser.beans.DateChooserCombo datumDO;
-    private datechooser.beans.DateChooserCombo datumOD;
+    private com.toedter.calendar.JDateChooser datumDO;
+    private com.toedter.calendar.JDateChooser datumOD;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -379,7 +389,7 @@ public class UnosPotvrde extends javax.swing.JDialog {
     private javax.swing.JTextField txtPretrazi;
     // End of variables declaration//GEN-END:variables
 
-    private void prepareView()  {
+    private void prepareView() {
         try {
             lblErrorPretraga.setVisible(false);
             lblErrorID.setVisible(false);
@@ -392,7 +402,7 @@ public class UnosPotvrde extends javax.swing.JDialog {
         } catch (SQLException ex) {
             Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     private void popuniCmbAutomobili() throws SQLException {
@@ -413,69 +423,66 @@ public class UnosPotvrde extends javax.swing.JDialog {
         }
     }
 
-
-    
-  public boolean validacija(){
-       lblErrorID.setVisible(false);
+    public boolean validacija() {
+        lblErrorID.setVisible(false);
         lblErrorCena.setVisible(false);
         lblErrorDatumDo.setVisible(false);
         lblErrorDatumOd.setVisible(false);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-      
-      boolean prazno = false;
+
+        boolean prazno = false;
         if (txtID.getText().isEmpty()) {
             lblErrorID.setText("ID je obavezan!");
             lblErrorID.setVisible(true);
             prazno = true;
         }
-        
-         if (txtCena.getText().isEmpty()) {
+
+        if (txtCena.getText().isEmpty()) {
             lblErrorCena.setText("Cena je obavezano polje!");
             lblErrorCena.setVisible(true);
             prazno = true;
-         }else if(Double.parseDouble(txtCena.getText()) <= 0){
-               lblErrorCena.setText("Cena ne sme biti manja od 0!");
-                lblErrorCena.setVisible(true);
+        } else if (Double.parseDouble(txtCena.getText()) <= 0) {
+            lblErrorCena.setText("Cena ne sme biti manja od 0!");
+            lblErrorCena.setVisible(true);
             prazno = true;
-         }
-         
+        }
+
+        if (datumOD.getDate().before(new Date())) {
+            lblErrorDatumOd.setText("Datum mora biti tekuci!");
+            lblErrorDatumOd.setVisible(true);
+            prazno = true;
+        }
+
+        if (datumDO.getDate().before(new Date())) {
+            lblErrorDatumDo.setText("Datum mora biti tekuci!");
+            lblErrorDatumDo.setVisible(true);
+            prazno = true;
+        }
         
-         
-         if(datumOD.getSelectedDate().getTime().before(new Date())){
-             lblErrorDatumOd.setText("Datum mora biti tekuci!");
+        if(datumDO.getDate().before(datumOD.getDate())){
+             lblErrorDatumOd.setText("Datum od ne sme biti veci od datuma do!");
              lblErrorDatumOd.setVisible(true);
               prazno = true;
          }
-         
-         if(datumDO.getSelectedDate().getTime().before(new Date())){
-             lblErrorDatumDo.setText("Datum mora biti tekuci!");
-             lblErrorDatumDo.setVisible(true);
-              prazno = true;
-         }
-         
-        
-         
-         
-         
-         return prazno;
+
+        return prazno;
     }
-  
-  
-    
-    private void popuniTabelu()  {
+
+    private void popuniTabelu() {
         try {
             List<PotvrdaOIznajmljivanju> potvrde = Kontroler.getInstanca().getPotvrde();
             TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
             tblPotvrde.setModel(tmp);
-        } catch (SQLException ex) {
+       
+        } catch (Exception ex) {
             Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
+
     }
 
     private void prikaziPotvrdu(PotvrdaOIznajmljivanju potvrda) {
-         List<PotvrdaOIznajmljivanju> potvrde = new ArrayList<>();
-         potvrde.add(potvrda);
+        List<PotvrdaOIznajmljivanju> potvrde = new ArrayList<>();
+        potvrde.add(potvrda);
         TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
         tblPotvrde.setModel(tmp);
     }
