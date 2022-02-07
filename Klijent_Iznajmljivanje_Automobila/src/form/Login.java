@@ -103,11 +103,12 @@ public class Login extends javax.swing.JFrame {
 
             Request request = new Request(Operations.LOGIN, korisnik);
             Response response = Communication.getInstance().login(request);
+            Korisnik ulogovan = (Korisnik) response.getResult();
 
             if (response.getResponseType().equals(ResponseType.SUCCESS)) {
                 JOptionPane.showMessageDialog(this, "Uspesna prijava!");
                 this.dispose();
-                Communication.getInstance().setUlogovaniKorisnik(korisnik);
+                Communication.getInstance().setUlogovaniKorisnik(ulogovan);
                 new MainForm().setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(this, "Neuspesna prijava!\n" + response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);

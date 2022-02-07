@@ -12,6 +12,7 @@ import communication.Response;
 import communication.Sender;
 import domen.Automobil;
 import domen.Korisnik;
+import domen.PotvrdaOIznajmljivanju;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 public class Communication {
     private static Communication instance;
     private Socket socket;
-    Korisnik ulogovani;
+    private Korisnik ulogovani;
 
     private Communication() {
     }
@@ -47,6 +48,12 @@ public class Communication {
     public void setUlogovaniKorisnik(Korisnik korisnik) {
         this.ulogovani = korisnik;
     }
+
+    public Korisnik getUlogovani() {
+        return ulogovani;
+    }
+    
+    
     
      public Response login(Request request) throws Exception{
         new Sender(socket).send(request);
@@ -100,6 +107,25 @@ public class Communication {
     public Response getDrivers() {
          Request request = new Request(Operations.GET_DRIVERS);
          new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
+    
+     public Response getConfirmations() {
+         Request request = new Request(Operations.GET_POTVRDE);
+         new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
+     
+     public Response addConfirmation(Request request){
+          new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+     }
+
+    public Response findConfirmation(Request request) {
+        new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }

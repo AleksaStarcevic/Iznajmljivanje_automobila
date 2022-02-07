@@ -18,5 +18,10 @@ public class Operations {
     public static final int EDIT_CAR=6;
     public static final int DELETE_CAR=7;
     public static final int GET_DRIVERS=8;
+    public static final int GET_POTVRDE=9;
+    public static final int ADD_CONFIRMATION=10;
+    public static final int FIND_CONFIRMATION=11;
+    public static final int EDIT_CONFIRMATION=12;
+    public static final int DELETE_CONFIRMATION=13;
     
 }
