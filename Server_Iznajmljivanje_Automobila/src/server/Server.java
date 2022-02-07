@@ -42,17 +42,17 @@ public class Server {
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private void startServer() throws IOException {
         ServerSocket serverSocket = new ServerSocket(9000);
         System.out.println("Cekam klijenta..");
         Socket socket = serverSocket.accept();
-        
+
         handleClient(socket);
     }
-    
+
     private void handleClient(Socket socket) {
         while (true) {
             try {
@@ -62,13 +62,13 @@ public class Server {
                 switch (operation) {
                     case Operations.LOGIN:
                         response = login(request);
-                        
+
                         break;
                     case Operations.ADD_CAR:
                         response = addCar(request);
-                        
+
                         break;
-                    
+
                     case Operations.GET_CAR_TYPES:
                         response = getCarTypes();
                         break;
@@ -90,31 +90,37 @@ public class Server {
                     case Operations.GET_POTVRDE:
                         response = getConfirmation();
                         break;
-                    
+
                     case Operations.ADD_CONFIRMATION:
                         response = addConfirmation(request);
                         break;
                     case Operations.FIND_CONFIRMATION:
                         response = findConfirmation(request);
                         break;
-                    
+                    case Operations.DELETE_CONFIRMATION:
+                        response = deleteConfirmation(request);
+                        break;
+                    case Operations.EDIT_CONFIRMATION:
+                        response = editConfirmation(request);
+                        break;
+
                     default:
                 }
 
                 // vracam odgovor klijentu               
                 new Sender(socket).send(response);
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                
+
             }
         }
     }
-    
+
     private Response login(Request request) {
         Response response = new Response();
         Korisnik requestKorisnik = (Korisnik) request.getArgument();
-        
+
         try {
             Korisnik korisnik = Kontroler.getInstanca().login(requestKorisnik.getKorisnickoIme(), requestKorisnik.getSifra());
             System.out.println("Uspesna prijava");
@@ -127,21 +133,21 @@ public class Server {
         }
         return response;
     }
-    
+
     private Response addCar(Request request) {
         Response response = new Response();
         Automobil auto = (Automobil) request.getArgument();
         try {
             Kontroler.getInstanca().dodajAutomobil(auto);
             response.setResponseType(ResponseType.SUCCESS);
-            
+
         } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
         return response;
     }
-    
+
     private Response getCarTypes() {
         Response response = new Response();
         try {
@@ -151,10 +157,10 @@ public class Server {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
-        
+
         return response;
     }
-    
+
     private Response getCarById(Request request) {
         Response response = new Response();
         String regBroj = (String) request.getArgument();
@@ -162,14 +168,14 @@ public class Server {
             Automobil auto = Kontroler.getInstanca().getAutomobilByRegBroj(regBroj);
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(auto);
-            
+
         } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
         return response;
     }
-    
+
     private Response getCars() {
         Response response = new Response();
         ArrayList<Automobil> automobili = new ArrayList<>();
@@ -183,21 +189,21 @@ public class Server {
         }
         return response;
     }
-    
+
     private Response editCar(Request request) {
         Response response = new Response();
         Automobil auto = (Automobil) request.getArgument();
         try {
             Kontroler.getInstanca().izmeniAutomobil(auto);
             response.setResponseType(ResponseType.SUCCESS);
-            
+
         } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
         return response;
     }
-    
+
     private Response deleteCar(Request request) {
         Response response = new Response();
         Automobil auto = (Automobil) request.getArgument();
@@ -210,7 +216,7 @@ public class Server {
         }
         return response;
     }
-    
+
     private Response getDrivers() {
         Response response = new Response();
         ArrayList<Vozac> vozaci = new ArrayList<>();
@@ -224,7 +230,7 @@ public class Server {
         }
         return response;
     }
-    
+
     private Response getConfirmation() {
         Response response = new Response();
         ArrayList<PotvrdaOIznajmljivanju> potvrde = new ArrayList<>();
@@ -238,26 +244,26 @@ public class Server {
         }
         return response;
     }
-    
+
     private Response addConfirmation(Request request) {
         Response response = new Response();
         PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju) request.getArgument();
         try {
             Kontroler.getInstanca().dodaj(potvrda);
             response.setResponseType(ResponseType.SUCCESS);
-            
+
         } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
         return response;
     }
-    
+
     private Response findConfirmation(Request request) {
         Response response = new Response();
         int id = (int) request.getArgument();
         try {
-           PotvrdaOIznajmljivanju potvrda = Kontroler.getInstanca().getPotvrdaByID(id);
+            PotvrdaOIznajmljivanju potvrda = Kontroler.getInstanca().getPotvrdaByID(id);
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(potvrda);
         } catch (Exception ex) {
@@ -266,5 +272,32 @@ public class Server {
         }
         return response;
     }
-    
+
+    private Response deleteConfirmation(Request request) {
+        Response response = new Response();
+        PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju) request.getArgument();
+        try {
+            Kontroler.getInstanca().obrisiPotvrdu(potvrda);
+            response.setResponseType(ResponseType.SUCCESS);
+
+        } catch (Exception ex) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(ex);
+        }
+        return response;
+    }
+
+    private Response editConfirmation(Request request) {
+        Response response = new Response();
+        PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju) request.getArgument();
+        try {
+            Kontroler.getInstanca().izmeniPotvrdu(potvrda);
+            response.setResponseType(ResponseType.SUCCESS);
+        } catch (Exception ex) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(ex);
+        }
+        return response;
+    }
+
 }

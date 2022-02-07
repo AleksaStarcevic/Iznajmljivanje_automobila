@@ -5,13 +5,18 @@
  */
 package form;
 
-
+import client.communication.Communication;
+import communication.Operations;
+import communication.Request;
+import communication.Response;
+import communication.ResponseType;
 import domen.Automobil;
 import domen.Korisnik;
 import domen.PotvrdaOIznajmljivanju;
 import domen.Vozac;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,7 +30,9 @@ import oracle.jrockit.jfr.JFR;
  * @author aleks
  */
 public class IzmenaPotvrde extends javax.swing.JDialog {
-PotvrdaOIznajmljivanju potvrdaPretrazena;
+
+    PotvrdaOIznajmljivanju potvrdaPretrazena;
+
     /**
      * Creates new form IzmenaPotvrde
      */
@@ -201,8 +208,8 @@ PotvrdaOIznajmljivanju potvrdaPretrazena;
     }//GEN-LAST:event_txtCenaActionPerformed
 
     private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
-        
-        if(validacija()){
+
+        if (validacija()) {
             return;
         }
 
@@ -214,19 +221,18 @@ PotvrdaOIznajmljivanju potvrdaPretrazena;
         Date datumDo = datumDO.getDate();
         double cena = Double.parseDouble(txtCena.getText());
 
-        try {
-//            Korisnik korisnik = Kontroler.getInstanca().getUlogovaniKorisnik();
-            Korisnik korisnik = new Korisnik(2, "akile", "123");
-            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
-            System.out.println(potvrda);
-//            Kontroler.getInstanca().izmeniPotvrdu(potvrda);
-            
-//            System.out.println(Kontroler.getInstanca().getPotvrde());
-            
-            
+        Korisnik korisnik = Communication.getInstance().getUlogovani();
+        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
 
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        Request request = new Request(Operations.EDIT_CONFIRMATION, potvrda);
+        Response response = Communication.getInstance().editConfirmation(request);
+
+        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+            JOptionPane.showMessageDialog(this, "Potvrda je uspesno izmenjena!");
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Neuspesno izmenjena potvda", "Greska", JOptionPane.ERROR_MESSAGE);
+
         }
     }//GEN-LAST:event_btnSacuvajActionPerformed
 
@@ -294,99 +300,96 @@ PotvrdaOIznajmljivanju potvrdaPretrazena;
     // End of variables declaration//GEN-END:variables
 
     void setPotvrda(PotvrdaOIznajmljivanju potvrdaPretrazena) {
-       this.potvrdaPretrazena = potvrdaPretrazena;
-       txtID.setEnabled(false);
-       txtID.setText(String.valueOf(potvrdaPretrazena.getPotvrdaID()));
-       txtCena.setText(String.valueOf(potvrdaPretrazena.getCena()));
-        System.out.println(potvrdaPretrazena.getDatumOD()+"");
-       datumOD.setDate(potvrdaPretrazena.getDatumOD());
-       datumDO.setDate(potvrdaPretrazena.getDatumDO());
+        this.potvrdaPretrazena = potvrdaPretrazena;
+        txtID.setEnabled(false);
+        txtID.setText(String.valueOf(potvrdaPretrazena.getPotvrdaID()));
+        txtCena.setText(String.valueOf(potvrdaPretrazena.getCena()));
+        System.out.println(potvrdaPretrazena.getDatumOD() + "");
+        datumOD.setDate(potvrdaPretrazena.getDatumOD());
+        datumDO.setDate(potvrdaPretrazena.getDatumDO());
     }
-    
-     private void prepareView()  {
+
+    private void prepareView() {
         try {
-           
+
             lblErrorID.setVisible(false);
             lblErrorCena.setVisible(false);
             lblErrorDatumDo.setVisible(false);
             lblErrorDatumOd.setVisible(false);
             popuniCmbAutomobili();
             popuniCmbVozaci();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-     
-     private void popuniCmbAutomobili() throws SQLException {
-//        cmbRegistracioniBroj.removeAllItems();
-//        List<Automobil> autombili = Kontroler.getInstanca().getStorageAutomobili();
-//        for (Automobil automobil : autombili) {
-//            cmbRegistracioniBroj.addItem(automobil);
-//
-//        }
+
+    private void popuniCmbAutomobili() throws SQLException {
+        Response response = Communication.getInstance().getCars();
+        ArrayList<Automobil> automobili = (ArrayList<Automobil>) response.getResult();
+        cmbRegistracioniBroj.removeAllItems();
+
+        for (Automobil automobil : automobili) {
+            cmbRegistracioniBroj.addItem(automobil);
+
+        }
     }
 
     private void popuniCmbVozaci() throws SQLException {
-//        cmbVozac.removeAllItems();
-//        List<Vozac> vozaci = Kontroler.getInstanca().getStorageVozac();
-//        for (Vozac vozac : vozaci) {
-//            cmbVozac.addItem(vozac);
-//
-//        }
+        Response response = Communication.getInstance().getDrivers();
+        List<Vozac> vozaci = (List<Vozac>) response.getResult();
+        cmbVozac.removeAllItems();
+
+        for (Vozac vozac : vozaci) {
+            cmbVozac.addItem(vozac);
+
+        }
     }
-    
-     public boolean validacija(){
-       lblErrorID.setVisible(false);
+
+    public boolean validacija() {
+        lblErrorID.setVisible(false);
         lblErrorCena.setVisible(false);
         lblErrorDatumDo.setVisible(false);
         lblErrorDatumOd.setVisible(false);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-      
-      boolean prazno = false;
+
+        boolean prazno = false;
         if (txtID.getText().isEmpty()) {
             lblErrorID.setText("ID je obavezan!");
             lblErrorID.setVisible(true);
             prazno = true;
         }
-        
-         if (txtCena.getText().isEmpty()) {
+
+        if (txtCena.getText().isEmpty()) {
             lblErrorCena.setText("Cena je obavezano polje!");
             lblErrorCena.setVisible(true);
             prazno = true;
-         }else if(Double.parseDouble(txtCena.getText()) <= 0){
-               lblErrorCena.setText("Cena ne sme biti manja od 0!");
-                lblErrorCena.setVisible(true);
+        } else if (Double.parseDouble(txtCena.getText()) <= 0) {
+            lblErrorCena.setText("Cena ne sme biti manja od 0!");
+            lblErrorCena.setVisible(true);
             prazno = true;
-         }
-         
-        
-         
-         if(datumOD.getDate().before(new Date())){
-             lblErrorDatumOd.setText("Datum mora biti tekuci!");
-             lblErrorDatumOd.setVisible(true);
-              prazno = true;
-         }
-         
-         if(datumDO.getDate().before(new Date())){
-             lblErrorDatumDo.setText("Datum mora biti tekuci!");
-             lblErrorDatumDo.setVisible(true);
-              prazno = true;
-         }
-         
-          if(datumDO.getDate().before(datumOD.getDate())){
-             lblErrorDatumOd.setText("Datum od ne sme biti veci od datuma do!");
-             lblErrorDatumOd.setVisible(true);
-              prazno = true;
-         }
-         
-        
-         
-         
-         
-         return prazno;
+        }
+
+        if (datumOD.getDate().before(new Date())) {
+            lblErrorDatumOd.setText("Datum mora biti tekuci!");
+            lblErrorDatumOd.setVisible(true);
+            prazno = true;
+        }
+
+        if (datumDO.getDate().before(new Date())) {
+            lblErrorDatumDo.setText("Datum mora biti tekuci!");
+            lblErrorDatumDo.setVisible(true);
+            prazno = true;
+        }
+
+        if (datumDO.getDate().before(datumOD.getDate())) {
+            lblErrorDatumOd.setText("Datum od ne sme biti veci od datuma do!");
+            lblErrorDatumOd.setVisible(true);
+            prazno = true;
+        }
+
+        return prazno;
     }
-     
-    
+
 }

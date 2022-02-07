@@ -206,7 +206,7 @@ public class Kontroler {
             storagePotvrda.connect();
             storagePotvrda.edit(potvrda);
             storagePotvrda.commit();
-            throw new Exception("Uspesno izmenjena potvrda!");
+           
         } catch (SQLException ex) {
             storagePotvrda.rollback();
             throw new Exception("Neuspesna izmena potvrde!");
@@ -220,7 +220,7 @@ public class Kontroler {
             storagePotvrda.connect();
             storagePotvrda.delete(p);
             storagePotvrda.commit();
-            throw new Exception("Uspesno brisanje potvrde!");
+           
         } catch (SQLException ex) {
             storagePotvrda.rollback();
             throw new Exception("Neuspesno brisanje potvrde!");

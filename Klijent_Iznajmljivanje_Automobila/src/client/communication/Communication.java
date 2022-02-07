@@ -129,6 +129,18 @@ public class Communication {
         
         return (Response) new Receiver(socket).receive();
     }
+
+    public Response deleteConfirmation(Request request) {
+        new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
+
+    public Response editConfirmation(Request request) {
+         new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
     
     
     

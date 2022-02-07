@@ -357,8 +357,6 @@ public class UnosPotvrde extends javax.swing.JFrame {
         Response response = Communication.getInstance().findConfirmation(request);
         potvrdaPretrazena = (PotvrdaOIznajmljivanju) response.getResult();
 
-        
-
         if (response.getResponseType().equals(ResponseType.SUCCESS)) {
             JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
             prikaziPotvrdu(potvrdaPretrazena);
@@ -367,7 +365,7 @@ public class UnosPotvrde extends javax.swing.JFrame {
             popuniTabelu();
 
         }
-        
+
 
     }//GEN-LAST:event_btnPretragaActionPerformed
 
@@ -377,20 +375,27 @@ public class UnosPotvrde extends javax.swing.JFrame {
             IzmenaPotvrde izmena = new IzmenaPotvrde(this, true);
             izmena.setPotvrda(potvrdaPretrazena);
             izmena.setVisible(true);
-
+            popuniTabelu();
         }
 
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
         if (potvrdaPretrazena != null) {
-            try {
-//               Kontroler.getInstanca().obrisiPotvrdu(potvrdaPretrazena);
 
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, ex.getMessage());
-                popuniTabelu();
+            Request request = new Request(Operations.DELETE_CONFIRMATION, potvrdaPretrazena);
+            Response response = Communication.getInstance().deleteConfirmation(request);
+
+            if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+                JOptionPane.showMessageDialog(this, "Potvrda je uspesno obrisana!");
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Neuspesno obrisana potvda", "Greska", JOptionPane.ERROR_MESSAGE);
+               
+
             }
+            popuniTabelu();
+
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
 
