@@ -133,11 +133,11 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_itemPrikazActionPerformed
 
     private void itemTabelaPotvrdaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTabelaPotvrdaActionPerformed
-       
+        
     }//GEN-LAST:event_itemTabelaPotvrdaActionPerformed
 
     private void itemDodajAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemDodajAutomobilActionPerformed
-      new UnosAutomobila(this, true).setVisible(true);
+      new UnosAutomobila(this, rootPaneCheckingEnabled).setVisible(true);
     }//GEN-LAST:event_itemDodajAutomobilActionPerformed
 
     private void itemPretraziAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPretraziAutomobilActionPerformed
@@ -173,7 +173,6 @@ public class MainForm extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

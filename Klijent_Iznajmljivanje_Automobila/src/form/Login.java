@@ -5,11 +5,7 @@
  */
 package form;
 
-import client.communication.Communication;
-import communication.Operations;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
+import controller.Kontroler;
 import domen.Korisnik;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,9 +20,10 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    
     public Login() {
         initComponents();
-
+        
     }
 
     /**
@@ -99,26 +96,18 @@ public class Login extends javax.swing.JFrame {
             izvrsiValidaciju();
             String username = txtUsername.getText().trim();
             String password = String.valueOf(txtPassword.getPassword());
-            Korisnik korisnik = new Korisnik(username, password);
-
-            Request request = new Request(Operations.LOGIN, korisnik);
-            Response response = Communication.getInstance().login(request);
-            Korisnik ulogovan = (Korisnik) response.getResult();
-
-            if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-                JOptionPane.showMessageDialog(this, "Uspesna prijava!");
-                this.dispose();
-                Communication.getInstance().setUlogovaniKorisnik(ulogovan);
-                new MainForm().setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, "Neuspesna prijava!\n" + response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-            }
-
+            Korisnik korisnik = Kontroler.getInstanca().login(username, password);
+            JOptionPane.showMessageDialog(this, "Uspesna prijava!");
+            this.dispose();
+            Kontroler.getInstanca().setUlogovaniKorisnik(korisnik);
+            new MainForm().setVisible(true);
         } catch (Exception ex) {
-
+            JOptionPane.showMessageDialog(this, "Neuspesna prijava!\n"+ex.getMessage(),"Greska",JOptionPane.ERROR_MESSAGE);
         }
-
-
+       
+        
+        
+       
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
@@ -147,7 +136,6 @@ public class Login extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -166,14 +154,14 @@ public class Login extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void izvrsiValidaciju() throws Exception {
-        String errorMessage = "";
-        if (txtUsername.getText().isEmpty()) {
-            errorMessage += "Korisnik ne sme biti prazan!\n";
+        String errorMessage="";
+        if(txtUsername.getText().isEmpty()){
+            errorMessage+="Korisnik ne sme biti prazan!\n";
         }
-        if (String.valueOf(txtPassword.getPassword()).isEmpty()) {
-            errorMessage += "Lozinka ne sme biti prazna!";
+        if(String.valueOf(txtPassword.getPassword()).isEmpty()){
+            errorMessage+="Lozinka ne sme biti prazna!";
         }
-        if (!errorMessage.isEmpty()) {
+        if(!errorMessage.isEmpty()){
             throw new Exception(errorMessage);
         }
     }

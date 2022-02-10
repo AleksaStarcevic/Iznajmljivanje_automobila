@@ -69,8 +69,7 @@ public class Communication {
         return (Response) new Receiver(socket).receive();
     }
     
-    public Response getCarTypes() throws Exception{
-        Request request = new Request(Operations.GET_CAR_TYPES);
+    public Response getCarTypes(Request request) throws Exception{
          new Sender(socket).send(request);
          return (Response) new Receiver(socket).receive();
         
@@ -78,65 +77,65 @@ public class Communication {
     
    
 
-    public Response getCarById(Request request) {
+    public Response getCarById(Request request) throws Exception{
         new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
 
-    public Response getCars() {
-        Request request = new Request(Operations.GET_CARS);
+    public Response getCars(Request request) throws Exception {
+       
          new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
         
     }
 
-    public Response editCar(Request request) {
+    public Response editCar(Request request) throws Exception{
           new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
 
-    public Response deleteCar(Request request) {
+    public Response deleteCar(Request request) throws Exception{
          new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
 
-    public Response getDrivers() {
-         Request request = new Request(Operations.GET_DRIVERS);
+    public Response getDrivers(Request request) throws Exception{
+         
          new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
     
-     public Response getConfirmations() {
-         Request request = new Request(Operations.GET_POTVRDE);
+     public Response getConfirmations(Request request) throws Exception{
+         
          new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
      
-     public Response addConfirmation(Request request){
+     public Response addConfirmation(Request request) throws Exception{
           new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
      }
 
-    public Response findConfirmation(Request request) {
+    public Response findConfirmation(Request request) throws Exception{
         new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
 
-    public Response deleteConfirmation(Request request) {
+    public Response deleteConfirmation(Request request) throws Exception {
         new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();
     }
 
-    public Response editConfirmation(Request request) {
+    public Response editConfirmation(Request request) throws Exception{
          new Sender(socket).send(request);
         
         return (Response) new Receiver(socket).receive();

@@ -5,11 +5,7 @@
  */
 package form;
 
-import client.communication.Communication;
-import communication.Operations;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
+import controller.Kontroler;
 import domen.Automobil;
 import domen.Korisnik;
 import domen.PotvrdaOIznajmljivanju;
@@ -322,19 +318,17 @@ public class UnosPotvrde extends javax.swing.JFrame {
         Date datumDo = datumDO.getDate();
         double cena = Double.parseDouble(txtCena.getText());
 
-        Korisnik korisnik = Communication.getInstance().getUlogovani();
-        System.out.println(korisnik);
-        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
-        System.out.println(potvrda);
-        Request request = new Request(Operations.ADD_CONFIRMATION, potvrda);
-        Response response = Communication.getInstance().addConfirmation(request);
-        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-            JOptionPane.showMessageDialog(this, "Uspesno dodata potvrda!");
-        } else {
-            JOptionPane.showMessageDialog(this, "Neuspesan unos potvrde!\n" + response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+        try {
+            Korisnik korisnik = Kontroler.getInstanca().getUlogovaniKorisnik();
+
+            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
+            Kontroler.getInstanca().dodaj(potvrda);
+            JOptionPane.showMessageDialog(this, "Potvrda je uspesno sacuvana!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Neuspesan unos potvrde!\n" + e.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
 
         }
-
         popuniTabelu();
 
     }//GEN-LAST:event_btnSacuvajActionPerformed
@@ -352,21 +346,15 @@ public class UnosPotvrde extends javax.swing.JFrame {
             return;
         }
 
-        int id = Integer.parseInt(txtPretrazi.getText());
-        Request request = new Request(Operations.FIND_CONFIRMATION, id);
-        Response response = Communication.getInstance().findConfirmation(request);
-        potvrdaPretrazena = (PotvrdaOIznajmljivanju) response.getResult();
-
-        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-            JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
+        try {
+            int id = Integer.parseInt(txtPretrazi.getText());
+            potvrdaPretrazena = Kontroler.getInstanca().getPotvrdaByID(id);
             prikaziPotvrdu(potvrdaPretrazena);
-        } else {
-            JOptionPane.showMessageDialog(this, response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
             popuniTabelu();
-
         }
-
-
     }//GEN-LAST:event_btnPretragaActionPerformed
 
     private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
@@ -375,27 +363,21 @@ public class UnosPotvrde extends javax.swing.JFrame {
             IzmenaPotvrde izmena = new IzmenaPotvrde(this, true);
             izmena.setPotvrda(potvrdaPretrazena);
             izmena.setVisible(true);
-            popuniTabelu();
+
         }
+        popuniTabelu();
 
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
     private void btnObrisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObrisiActionPerformed
         if (potvrdaPretrazena != null) {
-
-            Request request = new Request(Operations.DELETE_CONFIRMATION, potvrdaPretrazena);
-            Response response = Communication.getInstance().deleteConfirmation(request);
-
-            if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+            try {
+                Kontroler.getInstanca().obrisiPotvrdu(potvrdaPretrazena);
                 JOptionPane.showMessageDialog(this, "Potvrda je uspesno obrisana!");
-
-            } else {
-                JOptionPane.showMessageDialog(this, "Neuspesno obrisana potvda", "Greska", JOptionPane.ERROR_MESSAGE);
-               
-
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
             }
             popuniTabelu();
-
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
 
@@ -448,24 +430,30 @@ public class UnosPotvrde extends javax.swing.JFrame {
     }
 
     private void popuniCmbAutomobili() throws SQLException {
-        Response response = Communication.getInstance().getCars();
-        ArrayList<Automobil> automobili = (ArrayList<Automobil>) response.getResult();
         cmbRegistracioniBroj.removeAllItems();
+        List<Automobil> autombili;
+        try {
+            autombili = Kontroler.getInstanca().getStorageAutomobili();
+            for (Automobil automobil : autombili) {
+                cmbRegistracioniBroj.addItem(automobil);
 
-        for (Automobil automobil : automobili) {
-            cmbRegistracioniBroj.addItem(automobil);
-
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void popuniCmbVozaci() throws SQLException {
-        Response response = Communication.getInstance().getDrivers();
-        List<Vozac> vozaci = (List<Vozac>) response.getResult();
         cmbVozac.removeAllItems();
+        List<Vozac> vozaci;
+        try {
+            vozaci = Kontroler.getInstanca().getStorageVozac();
+            for (Vozac vozac : vozaci) {
+                cmbVozac.addItem(vozac);
 
-        for (Vozac vozac : vozaci) {
-            cmbVozac.addItem(vozac);
-
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -516,8 +504,7 @@ public class UnosPotvrde extends javax.swing.JFrame {
 
     private void popuniTabelu() {
         try {
-            Response response = Communication.getInstance().getConfirmations();
-            List<PotvrdaOIznajmljivanju> potvrde = (List<PotvrdaOIznajmljivanju>) response.getResult();
+            List<PotvrdaOIznajmljivanju> potvrde = Kontroler.getInstanca().getPotvrde();
             TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
             tblPotvrde.setModel(tmp);
 

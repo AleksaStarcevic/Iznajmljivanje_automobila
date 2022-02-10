@@ -75,16 +75,14 @@ public class Kontroler {
 
     public void dodajAutomobil(Automobil a) throws Exception {
         storageAutomobil.connect();
-
         try {
             if (!(storageAutomobil.getAll().contains(a))) {
-
                 storageAutomobil.add(a);
                 storageAutomobil.commit();
             } else {
-                throw new Exception("Automobil vec postoji!");
+                throw new Exception("Automobil sa registarskom oznakom:" + a.getRegistracioniBroj() + " vec postoji u sistemu!");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             storageAutomobil.rollback();
             throw e;
         } finally {
@@ -98,7 +96,7 @@ public class Kontroler {
             storageAutomobil.connect();
             storageAutomobil.delete(a);
             storageAutomobil.commit();
-            
+
         } catch (SQLException ex) {
             storageAutomobil.rollback();
             throw new Exception("Neuspesno brisanje automobila!");
@@ -206,7 +204,7 @@ public class Kontroler {
             storagePotvrda.connect();
             storagePotvrda.edit(potvrda);
             storagePotvrda.commit();
-           
+
         } catch (SQLException ex) {
             storagePotvrda.rollback();
             throw new Exception("Neuspesna izmena potvrde!");
@@ -214,13 +212,13 @@ public class Kontroler {
             storagePotvrda.disconnect();
         }
     }
-    
-    public void obrisiPotvrdu(PotvrdaOIznajmljivanju p) throws Exception{
+
+    public void obrisiPotvrdu(PotvrdaOIznajmljivanju p) throws Exception {
         try {
             storagePotvrda.connect();
             storagePotvrda.delete(p);
             storagePotvrda.commit();
-           
+
         } catch (SQLException ex) {
             storagePotvrda.rollback();
             throw new Exception("Neuspesno brisanje potvrde!");
@@ -239,7 +237,7 @@ public class Kontroler {
             if (!storageVozac.getAll().contains(v)) {
                 storageVozac.add(v);
                 storageVozac.commit();
-               
+
             } else {
                 throw new Exception("Vozac vec sa id:" + v.getVozacID() + " vec postoji u sistemu!");
             }

@@ -5,18 +5,13 @@
  */
 package form;
 
-import client.communication.Communication;
-import communication.Operations;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
+import controller.Kontroler;
 import domen.Automobil;
 import domen.Korisnik;
 import domen.PotvrdaOIznajmljivanju;
 import domen.Vozac;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -221,18 +216,13 @@ public class IzmenaPotvrde extends javax.swing.JDialog {
         Date datumDo = datumDO.getDate();
         double cena = Double.parseDouble(txtCena.getText());
 
-        Korisnik korisnik = Communication.getInstance().getUlogovani();
-        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
-
-        Request request = new Request(Operations.EDIT_CONFIRMATION, potvrda);
-        Response response = Communication.getInstance().editConfirmation(request);
-
-        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+        try {
+            Korisnik korisnik = Kontroler.getInstanca().getUlogovaniKorisnik();
+            PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju(id, datumOd, datumDo, cena, auto, vozac, korisnik);
+            Kontroler.getInstanca().izmeniPotvrdu(potvrda);
             JOptionPane.showMessageDialog(this, "Potvrda je uspesno izmenjena!");
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Neuspesno izmenjena potvda", "Greska", JOptionPane.ERROR_MESSAGE);
-
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnSacuvajActionPerformed
 
@@ -261,7 +251,6 @@ public class IzmenaPotvrde extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(IzmenaPotvrde.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
@@ -326,24 +315,30 @@ public class IzmenaPotvrde extends javax.swing.JDialog {
     }
 
     private void popuniCmbAutomobili() throws SQLException {
-        Response response = Communication.getInstance().getCars();
-        ArrayList<Automobil> automobili = (ArrayList<Automobil>) response.getResult();
         cmbRegistracioniBroj.removeAllItems();
+        List<Automobil> autombili;
+        try {
+            autombili = Kontroler.getInstanca().getStorageAutomobili();
+            for (Automobil automobil : autombili) {
+                cmbRegistracioniBroj.addItem(automobil);
 
-        for (Automobil automobil : automobili) {
-            cmbRegistracioniBroj.addItem(automobil);
-
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(IzmenaPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void popuniCmbVozaci() throws SQLException {
-        Response response = Communication.getInstance().getDrivers();
-        List<Vozac> vozaci = (List<Vozac>) response.getResult();
         cmbVozac.removeAllItems();
+        List<Vozac> vozaci;
+        try {
+            vozaci = Kontroler.getInstanca().getStorageVozac();
+            for (Vozac vozac : vozaci) {
+                cmbVozac.addItem(vozac);
 
-        for (Vozac vozac : vozaci) {
-            cmbVozac.addItem(vozac);
-
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(IzmenaPotvrde.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -5,7 +5,7 @@
  */
 package form;
 
-
+import controller.Kontroler;
 import domen.Vozac;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -188,7 +188,7 @@ public class UnosVozaca extends javax.swing.JFrame {
       
       Vozac v = new Vozac(vozacID, ime, prezime, email, adresa);
         try {
-//            Kontroler.getInstanca().dodajVozaca(v);
+            Kontroler.getInstanca().dodajVozaca(v);
             JOptionPane.showMessageDialog(this, "Uspesan unos vozaca!");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Neuspesan unos vozaca!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
@@ -220,7 +220,6 @@ public class UnosVozaca extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UnosVozaca.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

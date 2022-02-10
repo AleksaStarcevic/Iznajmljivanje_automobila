@@ -5,13 +5,7 @@
  */
 package form;
 
-import client.communication.Communication;
-import communication.Operations;
-import communication.Receiver;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
-
+import controller.Kontroler;
 import domen.Automobil;
 import domen.TipAutomobila;
 import java.sql.SQLException;
@@ -25,9 +19,7 @@ import javax.swing.JOptionPane;
  * @author aleks
  */
 public class UnosAutomobila extends javax.swing.JDialog {
-
-    Automobil pretrazenAuto;
-
+Automobil pretrazenAuto;
     /**
      * Creates new form NewJDialog
      */
@@ -171,25 +163,17 @@ public class UnosAutomobila extends javax.swing.JDialog {
             String marka = txtMarka.getText();
             String model = txtModel.getText();
 
-            if (validacija(regBroj, marka, model)) {
+            if(validacija(regBroj, marka, model)){
                 return;
             }
 
             TipAutomobila tip = (TipAutomobila) cmbTip.getSelectedItem();
             Automobil auto = new Automobil(regBroj, model, marka, tip);
-       
-            Request request = new Request(Operations.ADD_CAR, auto);
-            Response response = Communication.getInstance().addCar(request);
-            
-           if(response.getResponseType().equals(ResponseType.SUCCESS)){
-               JOptionPane.showMessageDialog(this, "Automobil je uspesno sacuvan!");
-           } else{
-               JOptionPane.showMessageDialog(this, "Neuspesan unos automobila!\n" + response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-           }
-            
-            
+
+            Kontroler.getInstanca().dodajAutomobil(auto);
+            JOptionPane.showMessageDialog(this, "Automobil je uspesno sacuvan!");
         } catch (Exception ex) {
-            
+            JOptionPane.showMessageDialog(this, "Neuspesan unos automobila!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_btnSacuvajActionPerformed
@@ -219,10 +203,6 @@ public class UnosAutomobila extends javax.swing.JDialog {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UnosAutomobila.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -259,9 +239,7 @@ public class UnosAutomobila extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
  private void popuniComboTipova() {
         try {
-            
-            Response response = Communication.getInstance().getCarTypes();
-            ArrayList<TipAutomobila> tipovi = (ArrayList<TipAutomobila>) response.getResult();
+            ArrayList<TipAutomobila> tipovi = (ArrayList<TipAutomobila>) Kontroler.getInstanca().getStorageTipovi();
             cmbTip.removeAllItems();
             for (TipAutomobila tipAutomobila : tipovi) {
                 cmbTip.addItem(tipAutomobila);
@@ -274,35 +252,37 @@ public class UnosAutomobila extends javax.swing.JDialog {
     private boolean validacija(String regBroj, String marka, String model) {
         lblErrorMarka.setVisible(false);
         lblErrorRegBroj.setVisible(false);
-        lblErrorModel.setVisible(false);
+         lblErrorModel.setVisible(false);
         boolean prazno = false;
-        if (regBroj.isEmpty()) {
+        if(regBroj.isEmpty()){
             prazno = true;
             lblErrorRegBroj.setVisible(true);
             lblErrorRegBroj.setText("Registracioni broj je obavezno polje");
         }
-
-        if (marka.isEmpty()) {
-            prazno = true;
+        
+          if(marka.isEmpty()){
+              prazno = true;
             lblErrorMarka.setVisible(true);
             lblErrorMarka.setText("Marka ne sme biti prazno polje");
         }
-
-        if (model.isEmpty()) {
-            prazno = true;
+          
+          if(model.isEmpty()){
+              prazno = true;
             lblErrorModel.setVisible(true);
             lblErrorModel.setText("Model ne sme biti prazno polje");
         }
-        return prazno;
+          return prazno;
     }
 
     void setPretrazenAuto(Automobil pretrazenAuto) {
-        this.pretrazenAuto = pretrazenAuto;
-        txtRegistarskiBroj.setText(pretrazenAuto.getRegistracioniBroj());
-        txtMarka.setText(pretrazenAuto.getMarka());
-        txtModel.setText(pretrazenAuto.getModel());
-        cmbTip.setSelectedItem(pretrazenAuto.getTip());
-
+      this.pretrazenAuto = pretrazenAuto;
+      txtRegistarskiBroj.setText(pretrazenAuto.getRegistracioniBroj());
+      txtMarka.setText(pretrazenAuto.getMarka());
+      txtModel.setText(pretrazenAuto.getModel());
+      cmbTip.setSelectedItem(pretrazenAuto.getTip());
+              
     }
+
+
 
 }

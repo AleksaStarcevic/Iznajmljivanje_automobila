@@ -5,12 +5,7 @@
  */
 package form;
 
-
-import client.communication.Communication;
-import communication.Operations;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
+import controller.Kontroler;
 import domen.Automobil;
 import domen.TipAutomobila;
 import java.sql.SQLException;
@@ -177,15 +172,8 @@ Automobil pretrazenAuto;
             TipAutomobila tip = (TipAutomobila) cmbTip.getSelectedItem();
             Automobil auto = new Automobil(regBroj, model, marka, tip);
 
-            Request request = new Request(Operations.EDIT_CAR, auto);
-            Response response = Communication.getInstance().editCar(request);
-             if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-                JOptionPane.showMessageDialog(this, "Uspesna izmena automobila");
-                
-            } else {
-                JOptionPane.showMessageDialog(this, response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-            }
-            
+            Kontroler.getInstanca().izmeniAutomobil(auto);
+            JOptionPane.showMessageDialog(this, "Uspesna izmena automobila");
             
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -226,14 +214,6 @@ Automobil pretrazenAuto;
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -266,9 +246,7 @@ Automobil pretrazenAuto;
     // End of variables declaration//GEN-END:variables
  private void popuniComboTipova() {
         try {
-            
-            Response response = Communication.getInstance().getCarTypes();
-            ArrayList<TipAutomobila> tipovi = (ArrayList<TipAutomobila>) response.getResult();
+            ArrayList<TipAutomobila> tipovi = (ArrayList<TipAutomobila>) Kontroler.getInstanca().getStorageTipovi();
             cmbTip.removeAllItems();
             for (TipAutomobila tipAutomobila : tipovi) {
                 cmbTip.addItem(tipAutomobila);

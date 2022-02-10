@@ -5,11 +5,7 @@
  */
 package form;
 
-import client.communication.Communication;
-import communication.Operations;
-import communication.Request;
-import communication.Response;
-import communication.ResponseType;
+import controller.Kontroler;
 import domen.Automobil;
 
 import java.sql.SQLException;
@@ -35,7 +31,6 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     public PretragaAutomobila() {
         initComponents();
         prepareTable();
-        lblErrorPretraga.setVisible(false);
     }
 
     /**
@@ -144,26 +139,13 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
-        lblErrorPretraga.setVisible(false);
-        if (txtPretraga.getText().isEmpty()) {
-            lblErrorPretraga.setText("Polje ne sme biti prazno!");
-            lblErrorPretraga.setVisible(true);
-        }
-
         try {
             prepareTable();
             String regBroj = txtPretraga.getText();
-            Request request = new Request(Operations.FIND_CAR, regBroj);
-            Response response = Communication.getInstance().getCarById(request);
-            pretrazenAuto = (Automobil) response.getResult();
-            if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-                JOptionPane.showMessageDialog(this, "Uspesno pronadjen automobil sa registarskom oznakom: " + pretrazenAuto.getRegistracioniBroj());
-                refreshTable(pretrazenAuto);
-                System.out.println(pretrazenAuto);
-            } else {
-                JOptionPane.showMessageDialog(this, "Neuspesana pretraga automobila!\n" + response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-            }
-
+            pretrazenAuto = Kontroler.getInstanca().getAutomobilByRegBroj(regBroj);
+            System.out.println(pretrazenAuto);
+            refreshTable(pretrazenAuto);
+            JOptionPane.showMessageDialog(this, "Uspesno pronadjen automobil sa registarskom oznakom: " + pretrazenAuto.getRegistracioniBroj());
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
             prepareTable();
@@ -186,22 +168,14 @@ public class PretragaAutomobila extends javax.swing.JFrame {
 
         if (pretrazenAuto != null) {
             try {
-                Request request = new Request(Operations.DELETE_CAR, pretrazenAuto);
-               Response response = Communication.getInstance().deleteCar(request);
-               
-               if (response.getResponseType().equals(ResponseType.SUCCESS)) {
-                JOptionPane.showMessageDialog(this, "Uspesno obrisan automobil sa registarskom oznakom: " + pretrazenAuto.getRegistracioniBroj());
-                
-            } else {
-                JOptionPane.showMessageDialog(this, response.getException().getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
-            }
-                prepareTable();
-               
 
+                Kontroler.getInstanca().obrisiAutomobil(pretrazenAuto);
+                JOptionPane.showMessageDialog(this, "Uspesno obrisan automobil sa registarskom oznakom: " + pretrazenAuto.getRegistracioniBroj());
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
-               
+                
             }
+            prepareTable();
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
 
@@ -234,10 +208,6 @@ public class PretragaAutomobila extends javax.swing.JFrame {
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -259,11 +229,13 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void prepareTable() {
-        Response response = Communication.getInstance().getCars();
-        ArrayList<Automobil> automobili = (ArrayList<Automobil>) response.getResult();
-        tma = new TableModelAutomobili(automobili);
-        tblAutomobili.setModel(tma);
-
+        try {
+            ArrayList<Automobil> automobili = (ArrayList<Automobil>) Kontroler.getInstanca().getStorageAutomobili();
+            tma = new TableModelAutomobili(automobili);
+            tblAutomobili.setModel(tma);
+        } catch (Exception ex) {
+            Logger.getLogger(PretragaAutomobila.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void refreshTable(Automobil auto) {
