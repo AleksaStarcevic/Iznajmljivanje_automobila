@@ -30,11 +30,11 @@ import java.util.logging.Logger;
  */
 public class HandleClientsThread extends Thread{
     private Socket socket;
-    private List<Korisnik> prijavljeniKorisnici;
+    private Korisnik prijavljeniKorisnik;
 
     public HandleClientsThread(Socket socket) {
         this.socket = socket;
-        prijavljeniKorisnici = new ArrayList<>();
+       
     }
 
     @Override
@@ -100,16 +100,18 @@ public class HandleClientsThread extends Thread{
 
             }
         }
-        prijavljeniKorisnici = new ArrayList<>();
+        
     }
 
     public Socket getSocket() {
         return socket;
     }
 
-    public List<Korisnik> getPrijavljeniKorisnici() {
-        return prijavljeniKorisnici;
+    public Korisnik getPrijavljeniKorisnik() {
+        return prijavljeniKorisnik;
     }
+
+    
     
     
     
@@ -120,9 +122,15 @@ public class HandleClientsThread extends Thread{
         Korisnik requestKorisnik = (Korisnik) request.getArgument();
 
         try {
+            
             Korisnik korisnik = Kontroler.getInstanca().login(requestKorisnik.getKorisnickoIme(), requestKorisnik.getSifra());
+            if(Kontroler.getInstanca().getPrijavljeni().contains(korisnik)){
+                throw new Exception("Korisnik "+korisnik.getKorisnickoIme()+" je vec ulogovan na sistem!");
+            }
+            Kontroler.getInstanca().getPrijavljeni().add(korisnik);
+            
             System.out.println("Uspesna prijava");
-            prijavljeniKorisnici.add(korisnik);
+            prijavljeniKorisnik = korisnik;
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(korisnik);
         } catch (Exception ex) {

@@ -12,6 +12,7 @@ import domen.TipAutomobila;
 import domen.Vozac;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,6 +36,7 @@ public class Kontroler {
     private final RepositoryTipovi storageTipovi;
 
     private Korisnik ulogovaniKorisnik;
+    private List<Korisnik> prijavljeni;
 
     private Kontroler() {
         this.storageKorisnik = new RepositoryKorisnik();
@@ -42,6 +44,7 @@ public class Kontroler {
         this.storagePotvrda = new RepositoryPotvrda();
         this.storageVozac = new RepositoryVozac();
         this.storageTipovi = new RepositoryTipovi();
+        this.prijavljeni = new ArrayList<>();
     }
 
     public static Kontroler getInstanca() {
@@ -50,6 +53,12 @@ public class Kontroler {
         }
         return instanca;
     }
+
+    public List<Korisnik> getPrijavljeni() {
+        return prijavljeni;
+    }
+    
+    
 
     public Korisnik login(String username, String password) throws Exception {
         try {

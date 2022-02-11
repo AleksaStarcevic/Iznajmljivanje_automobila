@@ -8,6 +8,7 @@ package repository.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import podesavanja.PodesavanjaBaze;
 
 /**
  *
@@ -34,9 +35,9 @@ public class DbConnectionFactory {
     public Connection getConnection() throws SQLException{
         if (connection == null || connection.isClosed()) {
             try {
-                String url = "jdbc:mysql://localhost:3306/iznajmljivanje_automobila";
-                String user = "root";
-                String password = "admin";
+                String url = PodesavanjaBaze.getInstance().getProperty("url");
+                String user = PodesavanjaBaze.getInstance().getProperty("username");
+                String password = PodesavanjaBaze.getInstance().getProperty("password");
                 connection = DriverManager.getConnection(url, user, password);
                 connection.setAutoCommit(false);
             } catch (SQLException ex) {

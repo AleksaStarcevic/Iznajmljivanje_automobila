@@ -6,6 +6,7 @@
 package client;
 
 import client.communication.Communication;
+import configuration.PodesavanjaKonekcije;
 import form.Login;
 
 import java.io.IOException;
@@ -33,11 +34,13 @@ public class Klijent {
 
     private void connect() throws IOException {
 
-        Socket s = new Socket("127.0.0.1", 9000);
+//        Socket s = new Socket("127.0.0.1", 9000);
+        int port = Integer.parseInt(PodesavanjaKonekcije.getInstance().getProperty("port"));
+        String adresa = PodesavanjaKonekcije.getInstance().getProperty("adresa");
+        Socket s = new Socket(adresa, port);
         System.out.println("Povezao se klijent");
         Communication.getInstance().setSocket(s);
         new Login().setVisible(true);
-        
 
     }
 

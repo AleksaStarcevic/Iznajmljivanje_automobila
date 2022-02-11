@@ -5,6 +5,8 @@
  */
 package threads;
 
+import configuration.PodesavanjaKonekcije;
+import domen.Korisnik;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import view.FrmMain;
 
 /**
  *
@@ -19,11 +22,13 @@ import java.util.logging.Logger;
  */
 public class ServerThread extends Thread{
    private ServerSocket serverSocket;
-   private List<HandleClientsThread> clients;
-
+   private static List<HandleClientsThread> clients;
+   
     public ServerThread() throws IOException {
-        serverSocket = new ServerSocket(9000);
+//        serverSocket = new ServerSocket(9000);
+          serverSocket = new ServerSocket(Integer.parseInt(PodesavanjaKonekcije.getInstance().getProperty("port")));
         clients = new ArrayList<>();
+       
     }
 
     @Override
@@ -53,6 +58,14 @@ public class ServerThread extends Thread{
 
     public ServerSocket getServerSocket() {
         return serverSocket;
+    }
+    
+    public  static List<Korisnik> getPrijavljeniKorisnici(){
+        List<Korisnik> korisnici = new ArrayList<>();
+        for (HandleClientsThread client : clients) {
+            korisnici.add(client.getPrijavljeniKorisnik());
+        }
+        return korisnici;
     }
     
     
