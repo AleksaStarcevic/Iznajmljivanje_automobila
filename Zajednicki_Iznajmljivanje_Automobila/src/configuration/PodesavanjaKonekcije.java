@@ -22,7 +22,7 @@ public class PodesavanjaKonekcije {
     private PodesavanjaKonekcije() {
         try {
             props = new Properties();
-            props.load(new FileInputStream("C:\\Users\\aleks\\Desktop\\FAKS\\4. GOD\\I SEMESTAR\\PS\\seminarski radim\\Iznajmljivanje automobila\\Zajednicki_Iznajmljivanje_Automobila\\podesavanje_konekcije.properties"));
+            props.load(new FileInputStream("C:\\Users\\aleks\\Desktop\\FAKS\\4. GOD\\I SEMESTAR\\PS\\seminarski radim\\Iznajmljivanje automobila\\Zajednicki_Iznajmljivanje_Automobila\\config\\podesavanje_konekcije.properties"));
         } catch (Exception ex) {
             Logger.getLogger(PodesavanjaKonekcije.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,7 +36,7 @@ public class PodesavanjaKonekcije {
     }
 
     public void ucitaj() throws Exception {
-        props.store(new FileOutputStream("C:\\Users\\aleks\\Desktop\\FAKS\\4. GOD\\I SEMESTAR\\PS\\seminarski radim\\Iznajmljivanje automobila\\Zajednicki_Iznajmljivanje_Automobila\\podesavanje_konekcije.properties"), "");
+        props.store(new FileOutputStream("C:\\Users\\aleks\\Desktop\\FAKS\\4. GOD\\I SEMESTAR\\PS\\seminarski radim\\Iznajmljivanje automobila\\Zajednicki_Iznajmljivanje_Automobila\\config\\podesavanje_konekcije.properties"), "");
     }
 
     public String getProperty(String key) {

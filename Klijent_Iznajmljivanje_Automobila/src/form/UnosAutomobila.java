@@ -159,7 +159,7 @@ Automobil pretrazenAuto;
     private void btnSacuvajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacuvajActionPerformed
 
         try {
-            String regBroj = txtRegistarskiBroj.getText();
+            String regBroj = txtRegistarskiBroj.getText().toUpperCase();
             String marka = txtMarka.getText();
             String model = txtModel.getText();
 

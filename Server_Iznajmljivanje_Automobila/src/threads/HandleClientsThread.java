@@ -190,7 +190,7 @@ public class HandleClientsThread extends Thread{
             automobili = (ArrayList<Automobil>) Kontroler.getInstanca().getStorageAutomobili();
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(automobili);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }

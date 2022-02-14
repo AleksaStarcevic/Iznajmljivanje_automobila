@@ -22,7 +22,7 @@ public class PodesavanjaBaze {
     private PodesavanjaBaze() {
         try {
             props = new Properties();
-            props.load(new FileInputStream("podesavanja_baze.properties"));
+            props.load(new FileInputStream("config\\podesavanja_baze.properties"));
         } catch (Exception ex) {
             Logger.getLogger(PodesavanjaBaze.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,7 +36,7 @@ public class PodesavanjaBaze {
     }
 
     public void ucitaj() throws Exception {
-        props.store(new FileOutputStream("podesavanja_baze.properties"), "");
+        props.store(new FileOutputStream("config\\podesavanja_baze.properties"), "");
     }
 
     public String getProperty(String key) {

@@ -21,6 +21,17 @@ import repository.impl.RepositoryKorisnik;
 import repository.impl.RepositoryPotvrda;
 import repository.impl.RepositoryTipovi;
 import repository.impl.RepositoryVozac;
+import so.AbstractSO;
+import so.automobil.AddCarSO;
+import so.automobil.DeleteCarSO;
+import so.automobil.EditCarSO;
+import so.automobil.FindCarSO;
+import so.automobil.GetAllCarsSO;
+import so.potvrda.AddPotvrdaSO;
+import so.potvrda.DeletePotvrdaSO;
+import so.potvrda.EditPotvrdaSO;
+import so.potvrda.FindPotvrdaSO;
+import so.potvrda.GetPotvrdeSO;
 
 /**
  *
@@ -57,8 +68,6 @@ public class Kontroler {
     public List<Korisnik> getPrijavljeni() {
         return prijavljeni;
     }
-    
-    
 
     public Korisnik login(String username, String password) throws Exception {
         try {
@@ -83,53 +92,80 @@ public class Kontroler {
     }
 
     public void dodajAutomobil(Automobil a) throws Exception {
-        storageAutomobil.connect();
         try {
-            if (!(storageAutomobil.getAll().contains(a))) {
-                storageAutomobil.add(a);
-                storageAutomobil.commit();
-            } else {
-                throw new Exception("Automobil sa registarskom oznakom:" + a.getRegistracioniBroj() + " vec postoji u sistemu!");
-            }
-        } catch (SQLException e) {
-            storageAutomobil.rollback();
+            AbstractSO dodajAutomobilSO = new AddCarSO();
+            dodajAutomobilSO.execute(a);
+
+        } catch (Exception e) {
             throw e;
-        } finally {
-            storageAutomobil.disconnect();
         }
 
+//        storageAutomobil.connect();
+//        try {
+//            if (!(storageAutomobil.getAll().contains(a))) {
+//                storageAutomobil.add(a);
+//                storageAutomobil.commit();
+//            } else {
+//                throw new Exception("Automobil sa registarskom oznakom:" + a.getRegistracioniBroj() + " vec postoji u sistemu!");
+//            }
+//        } catch (SQLException e) {
+//            storageAutomobil.rollback();
+//            throw e;
+//        } finally {
+//            storageAutomobil.disconnect();
+//        }
     }
 
     public void obrisiAutomobil(Automobil a) throws Exception {
         try {
-            storageAutomobil.connect();
-            storageAutomobil.delete(a);
-            storageAutomobil.commit();
+            AbstractSO obrisiAutomobilSO = new DeleteCarSO();
+            obrisiAutomobilSO.execute(a);
 
-        } catch (SQLException ex) {
-            storageAutomobil.rollback();
-            throw new Exception("Neuspesno brisanje automobila!");
-        } finally {
-            storageAutomobil.disconnect();
+        } catch (Exception e) {
+            throw e;
         }
+//        try {
+//            storageAutomobil.connect();
+//            storageAutomobil.delete(a);
+//            storageAutomobil.commit();
+//
+//        } catch (SQLException ex) {
+//            storageAutomobil.rollback();
+//            throw new Exception("Neuspesno brisanje automobila!");
+//        } finally {
+//            storageAutomobil.disconnect();
+//        }
     }
 
     public void izmeniAutomobil(Automobil a) throws Exception {
         try {
-            storageAutomobil.connect();
-            storageAutomobil.edit(a);
-            storageAutomobil.commit();
+            AbstractSO izmeniAutomobilSO = new EditCarSO();
+            izmeniAutomobilSO.execute(a);
 
-        } catch (SQLException ex) {
-            storageAutomobil.rollback();
-            throw new Exception("Neuspesna izmena automobila!");
-        } finally {
-            storageAutomobil.disconnect();
+        } catch (Exception e) {
+            throw e;
         }
+//        try {
+//            storageAutomobil.connect();
+//            storageAutomobil.edit(a);
+//            storageAutomobil.commit();
+//
+//        } catch (SQLException ex) {
+//            storageAutomobil.rollback();
+//            throw new Exception("Neuspesna izmena automobila!");
+//        } finally {
+//            storageAutomobil.disconnect();
+//        }
     }
 
-    public List<Automobil> getStorageAutomobili() throws SQLException {
-        return storageAutomobil.getAll();
+    public List<Automobil> getStorageAutomobili() throws Exception {
+        GetAllCarsSO vratiSveAutomobileSO = new GetAllCarsSO();
+        try {
+            vratiSveAutomobileSO.execute(null);
+        } catch (Exception e) {
+            throw e;
+        }
+        return vratiSveAutomobileSO.getListaAutomobila();
     }
 
     public List<Vozac> getStorageVozac() throws SQLException {
@@ -141,40 +177,54 @@ public class Kontroler {
     }
 
     public Automobil getAutomobilByRegBroj(String RegBroj) throws Exception {
-        Automobil auto = new Automobil();
+        FindCarSO nadjiAuto = new FindCarSO();
         try {
-
-            storageAutomobil.connect();
-            auto = storageAutomobil.getByID(RegBroj);
-            if (auto.getRegistracioniBroj() == null) {
-                throw new Exception("Automobil sa registracionim brojem " + RegBroj + " ne postoji u sistemu!");
-            }
-            storageAutomobil.commit();
-        } catch (SQLException ex) {
-            storageAutomobil.rollback();
-            throw new Exception("Neuspesna pretraga automobila!");
-        } finally {
-            storageAutomobil.disconnect();
+            nadjiAuto.execute(RegBroj);
+        } catch (Exception e) {
+            throw e;
         }
-
-        return auto;
+        return nadjiAuto.getAutomobil();
+//        Automobil auto = new Automobil();
+//        try {
+//
+//            storageAutomobil.connect();
+//            auto = storageAutomobil.getByID(RegBroj);
+//            if (auto.getRegistracioniBroj() == null) {
+//                throw new Exception("Automobil sa registracionim brojem " + RegBroj + " ne postoji u sistemu!");
+//            }
+//            storageAutomobil.commit();
+//        } catch (SQLException ex) {
+//            storageAutomobil.rollback();
+//            throw new Exception("Neuspesna pretraga automobila!");
+//        } finally {
+//            storageAutomobil.disconnect();
+//        }
+//
+//        return auto;
     }
 
     public void dodaj(PotvrdaOIznajmljivanju potvrda) throws Exception {
-        storagePotvrda.connect();
         try {
-            if (!(storagePotvrda.getAll().contains(potvrda))) {
-                storagePotvrda.add(potvrda);
-                storagePotvrda.commit();
-            } else {
-                throw new Exception("Potvrda vec postoji!");
-            }
+            AbstractSO dodajPotvrduSO = new AddPotvrdaSO();
+            dodajPotvrduSO.execute(potvrda);
+
         } catch (Exception e) {
-            storagePotvrda.rollback();
             throw e;
-        } finally {
-            storagePotvrda.disconnect();
         }
+//        storagePotvrda.connect();
+//        try {
+//            if (!(storagePotvrda.getAll().contains(potvrda))) {
+//                storagePotvrda.add(potvrda);
+//                storagePotvrda.commit();
+//            } else {
+//                throw new Exception("Potvrda vec postoji!");
+//            }
+//        } catch (Exception e) {
+//            storagePotvrda.rollback();
+//            throw e;
+//        } finally {
+//            storagePotvrda.disconnect();
+//        }
 
     }
 
@@ -192,52 +242,82 @@ public class Kontroler {
     }
 
     public PotvrdaOIznajmljivanju getPotvrdaByID(int id) throws Exception {
-        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
+            FindPotvrdaSO pronadjiPotvrduSO = new FindPotvrdaSO();
         try {
-            storagePotvrda.connect();
-            potvrda = storagePotvrda.getByID(id);
-            if (potvrda.getPotvrdaID() == 0) {
-                throw new Exception("Potvrda sa ID:" + id + " ne postoji u sistemu");
-            }
-            storagePotvrda.commit();
-        } catch (SQLException ex) {
-            throw ex;
-        } finally {
-            storagePotvrda.disconnect();
+            pronadjiPotvrduSO.execute(id);
+
+        } catch (Exception e) {
+            throw e;
         }
-        return potvrda;
+        return pronadjiPotvrduSO.getPotvrda();
+        
+//        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
+//        try {
+//            storagePotvrda.connect();
+//            potvrda = storagePotvrda.getByID(id);
+//            if (potvrda.getPotvrdaID() == 0) {
+//                throw new Exception("Potvrda sa ID:" + id + " ne postoji u sistemu");
+//            }
+//            storagePotvrda.commit();
+//        } catch (SQLException ex) {
+//            throw ex;
+//        } finally {
+//            storagePotvrda.disconnect();
+//        }
+//        return potvrda;
     }
 
     public void izmeniPotvrdu(PotvrdaOIznajmljivanju potvrda) throws Exception {
         try {
-            storagePotvrda.connect();
-            storagePotvrda.edit(potvrda);
-            storagePotvrda.commit();
+            AbstractSO izmeniPotvrduSO = new EditPotvrdaSO();
+            izmeniPotvrduSO.execute(potvrda);
 
-        } catch (SQLException ex) {
-            storagePotvrda.rollback();
-            throw new Exception("Neuspesna izmena potvrde!");
-        } finally {
-            storagePotvrda.disconnect();
+        } catch (Exception e) {
+            throw e;
         }
+//        try {
+//            storagePotvrda.connect();
+//            storagePotvrda.edit(potvrda);
+//            storagePotvrda.commit();
+//
+//        } catch (SQLException ex) {
+//            storagePotvrda.rollback();
+//            throw new Exception("Neuspesna izmena potvrde!");
+//        } finally {
+//            storagePotvrda.disconnect();
+//        }
     }
 
     public void obrisiPotvrdu(PotvrdaOIznajmljivanju p) throws Exception {
         try {
-            storagePotvrda.connect();
-            storagePotvrda.delete(p);
-            storagePotvrda.commit();
+            AbstractSO izbrisiPotvrduSO = new DeletePotvrdaSO();
+            izbrisiPotvrduSO.execute(p);
 
-        } catch (SQLException ex) {
-            storagePotvrda.rollback();
-            throw new Exception("Neuspesno brisanje potvrde!");
-        } finally {
-            storagePotvrda.disconnect();
+        } catch (Exception e) {
+            throw e;
         }
+//        try {
+//            storagePotvrda.connect();
+//            storagePotvrda.delete(p);
+//            storagePotvrda.commit();
+//
+//        } catch (SQLException ex) {
+//            storagePotvrda.rollback();
+//            throw new Exception("Neuspesno brisanje potvrde!");
+//        } finally {
+//            storagePotvrda.disconnect();
+//        }
     }
 
     public List<PotvrdaOIznajmljivanju> getPotvrde() throws Exception {
-        return storagePotvrda.getAll();
+        GetPotvrdeSO vratiPotvrdeSO = new GetPotvrdeSO();
+        try {
+            vratiPotvrdeSO.execute(null);
+
+        } catch (Exception e) {
+            throw e;
+        }
+        return vratiPotvrdeSO.getListaPotvrda();
     }
 
     public void dodajVozaca(Vozac v) throws Exception {
