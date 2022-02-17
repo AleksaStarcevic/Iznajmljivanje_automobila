@@ -57,6 +57,7 @@ public class Kontroler {
 
         if (response.getResponseType().equals(ResponseType.SUCCESS)) {
             Korisnik ulogovan = (Korisnik) response.getResult();
+            setUlogovaniKorisnik(ulogovan);
             return ulogovan;
         } else {
             throw response.getException();

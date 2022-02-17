@@ -5,8 +5,10 @@
  */
 package so.potvrda;
 
+import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
-import repository.impl.RepositoryPotvrda;
+import java.util.ArrayList;
+
 import so.AbstractSO;
 
 /**
@@ -15,40 +17,21 @@ import so.AbstractSO;
  */
 public class AddPotvrdaSO extends AbstractSO {
 
-    private final RepositoryPotvrda storagePotvrda;
-
-    public AddPotvrdaSO() {
-        this.storagePotvrda = new RepositoryPotvrda();
-    }
-
     @Override
     protected void precondition(Object param) throws Exception {
         if (param == null || !(param instanceof PotvrdaOIznajmljivanju)) {
             throw new Exception("Pogresan param");
         }
-        PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju) param;
-        if (storagePotvrda.getAll().contains(potvrda)) {
-            throw new Exception("Potvrda vec postoji!");
+        ArrayList<OpstiDomenskiObjekat> lista = (ArrayList<OpstiDomenskiObjekat>) brokerBaze.vratiSve((OpstiDomenskiObjekat) param);
+
+        if (lista.contains((OpstiDomenskiObjekat) param)) {
+            throw new Exception();
         }
     }
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        storagePotvrda.add((PotvrdaOIznajmljivanju) param);
+        brokerBaze.ubaci((OpstiDomenskiObjekat) param);
     }
 
-    @Override
-    protected void commitTransaction() throws Exception {
-        storagePotvrda.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storagePotvrda.rollback();
-    }
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storagePotvrda.disconnect();
-    }
 }

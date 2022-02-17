@@ -5,7 +5,9 @@
  */
 package so.potvrda;
 
+import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
+import java.util.ArrayList;
 import java.util.List;
 import repository.impl.RepositoryPotvrda;
 import so.AbstractSO;
@@ -14,43 +16,28 @@ import so.AbstractSO;
  *
  * @author aleks
  */
-public class GetPotvrdeSO extends AbstractSO{
-    private final RepositoryPotvrda storagePotvrda;
-    private List<PotvrdaOIznajmljivanju> listaPotvrda;
+public class GetPotvrdeSO extends AbstractSO {
 
-    public GetPotvrdeSO() {
-        this.storagePotvrda = new RepositoryPotvrda();
-    }
+    private List<OpstiDomenskiObjekat> listaPotvrda;
+
+    
 
     @Override
     protected void precondition(Object param) throws Exception {
-       
-       
+
+        if (param == null || !(param instanceof PotvrdaOIznajmljivanju)) {
+            throw new Exception("Pogresan param");
+        }
     }
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-       listaPotvrda = storagePotvrda.getAll();
+        listaPotvrda =  brokerBaze.vratiSve((OpstiDomenskiObjekat)param);
     }
 
-    public List<PotvrdaOIznajmljivanju> getListaPotvrda() {
+    public List<OpstiDomenskiObjekat> getListaPotvrda() {
         return listaPotvrda;
     }
-    
-    
 
-    @Override
-    protected void commitTransaction() throws Exception {
-        storagePotvrda.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storagePotvrda.rollback();
-    }
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storagePotvrda.disconnect();
-    }
+   
 }

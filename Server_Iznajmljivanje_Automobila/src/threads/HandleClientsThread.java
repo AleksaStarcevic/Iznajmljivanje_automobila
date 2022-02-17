@@ -14,7 +14,9 @@ import communication.Sender;
 import controller.Kontroler;
 import domen.Automobil;
 import domen.Korisnik;
+import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
+import domen.TipAutomobila;
 import domen.Vozac;
 import java.net.Socket;
 import java.sql.SQLException;
@@ -120,10 +122,10 @@ public class HandleClientsThread extends Thread{
      private Response login(Request request) {
         Response response = new Response();
         Korisnik requestKorisnik = (Korisnik) request.getArgument();
-
+        
         try {
             
-            Korisnik korisnik = Kontroler.getInstanca().login(requestKorisnik.getKorisnickoIme(), requestKorisnik.getSifra());
+            Korisnik korisnik = (Korisnik) Kontroler.getInstanca().login(requestKorisnik);
             if(Kontroler.getInstanca().getPrijavljeni().contains(korisnik)){
                 throw new Exception("Korisnik "+korisnik.getKorisnickoIme()+" je vec ulogovan na sistem!");
             }
@@ -158,9 +160,9 @@ public class HandleClientsThread extends Thread{
     private Response getCarTypes() {
         Response response = new Response();
         try {
-            response.setResult(Kontroler.getInstanca().getStorageTipovi());
+            response.setResult(Kontroler.getInstanca().getStorageTipovi(new TipAutomobila()));
             response.setResponseType(ResponseType.SUCCESS);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
@@ -171,8 +173,10 @@ public class HandleClientsThread extends Thread{
     private Response getCarById(Request request) {
         Response response = new Response();
         String regBroj = (String) request.getArgument();
+        Automobil autom = new Automobil();
+        autom.setRegistracioniBroj(regBroj);
         try {
-            Automobil auto = Kontroler.getInstanca().getAutomobilByRegBroj(regBroj);
+            OpstiDomenskiObjekat auto = Kontroler.getInstanca().getAutomobilByRegBroj(autom);
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(auto);
 
@@ -185,9 +189,9 @@ public class HandleClientsThread extends Thread{
 
     private Response getCars() {
         Response response = new Response();
-        ArrayList<Automobil> automobili = new ArrayList<>();
+        ArrayList<OpstiDomenskiObjekat> automobili;
         try {
-            automobili = (ArrayList<Automobil>) Kontroler.getInstanca().getStorageAutomobili();
+            automobili =  Kontroler.getInstanca().getStorageAutomobili(new Automobil());
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(automobili);
         } catch (Exception ex) {
@@ -240,9 +244,9 @@ public class HandleClientsThread extends Thread{
 
     private Response getConfirmation() {
         Response response = new Response();
-        ArrayList<PotvrdaOIznajmljivanju> potvrde = new ArrayList<>();
+        ArrayList<OpstiDomenskiObjekat> potvrde;
         try {
-            potvrde = (ArrayList<PotvrdaOIznajmljivanju>) Kontroler.getInstanca().getPotvrde();
+            potvrde = (ArrayList<OpstiDomenskiObjekat>) Kontroler.getInstanca().getPotvrde(new PotvrdaOIznajmljivanju());
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(potvrde);
         } catch (Exception ex) {
@@ -269,8 +273,10 @@ public class HandleClientsThread extends Thread{
     private Response findConfirmation(Request request) {
         Response response = new Response();
         int id = (int) request.getArgument();
+        PotvrdaOIznajmljivanju p = new PotvrdaOIznajmljivanju();
+        p.setPotvrdaID(id);
         try {
-            PotvrdaOIznajmljivanju potvrda = Kontroler.getInstanca().getPotvrdaByID(id);
+            PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju) Kontroler.getInstanca().getPotvrdaByID(p);
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(potvrda);
         } catch (Exception ex) {

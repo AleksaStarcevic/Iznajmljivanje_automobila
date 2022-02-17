@@ -5,6 +5,7 @@
  */
 package so.potvrda;
 
+import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
 import repository.impl.RepositoryPotvrda;
 import so.AbstractSO;
@@ -13,38 +14,19 @@ import so.AbstractSO;
  *
  * @author aleks
  */
-public class EditPotvrdaSO extends AbstractSO{
-    private final RepositoryPotvrda storagePotvrda;
-
-    public EditPotvrdaSO() {
-        this.storagePotvrda = new RepositoryPotvrda();
-    }
+public class EditPotvrdaSO extends AbstractSO {
 
     @Override
     protected void precondition(Object param) throws Exception {
         if (param == null || !(param instanceof PotvrdaOIznajmljivanju)) {
             throw new Exception("Pogresan param");
         }
-        
+
     }
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        storagePotvrda.edit((PotvrdaOIznajmljivanju) param);
+        brokerBaze.izmeni((OpstiDomenskiObjekat)param);
     }
 
-    @Override
-    protected void commitTransaction() throws Exception {
-        storagePotvrda.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storagePotvrda.rollback();
-    }
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storagePotvrda.disconnect();
-    }
 }

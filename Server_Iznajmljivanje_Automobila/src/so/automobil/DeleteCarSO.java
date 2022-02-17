@@ -6,6 +6,7 @@
 package so.automobil;
 
 import domen.Automobil;
+import domen.OpstiDomenskiObjekat;
 import repository.impl.RepositoryAutomobil;
 import so.AbstractSO;
 
@@ -15,11 +16,7 @@ import so.AbstractSO;
  */
 public class DeleteCarSO extends AbstractSO {
 
-    private final RepositoryAutomobil storageAutomobil;
-
-    public DeleteCarSO() {
-        storageAutomobil = new RepositoryAutomobil();
-    }
+    
 
     
 
@@ -32,24 +29,9 @@ public class DeleteCarSO extends AbstractSO {
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        storageAutomobil.delete((Automobil) param);
+       brokerBaze.obrisi((OpstiDomenskiObjekat)param);
     }
     
-     @Override
-    protected void commitTransaction() throws Exception {
-        storageAutomobil.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storageAutomobil.rollback();
-    }
-
-  
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storageAutomobil.disconnect();
-    }
+    
 
 }

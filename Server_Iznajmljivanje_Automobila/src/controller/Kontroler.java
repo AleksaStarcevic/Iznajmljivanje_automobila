@@ -7,6 +7,7 @@ package controller;
 
 import domen.Automobil;
 import domen.Korisnik;
+import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
 import domen.TipAutomobila;
 import domen.Vozac;
@@ -14,8 +15,6 @@ import domen.Vozac;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import repository.impl.RepositoryAutomobil;
 import repository.impl.RepositoryKorisnik;
 import repository.impl.RepositoryPotvrda;
@@ -27,11 +26,13 @@ import so.automobil.DeleteCarSO;
 import so.automobil.EditCarSO;
 import so.automobil.FindCarSO;
 import so.automobil.GetAllCarsSO;
+import so.korisnik.KorisniciSO;
 import so.potvrda.AddPotvrdaSO;
 import so.potvrda.DeletePotvrdaSO;
 import so.potvrda.EditPotvrdaSO;
 import so.potvrda.FindPotvrdaSO;
 import so.potvrda.GetPotvrdeSO;
+import so.tipovi.GetTipoviSO;
 
 /**
  *
@@ -69,25 +70,19 @@ public class Kontroler {
         return prijavljeni;
     }
 
-    public Korisnik login(String username, String password) throws Exception {
-        try {
+    public OpstiDomenskiObjekat login(Korisnik k) throws Exception {
 
-            storageKorisnik.connect();
-            List<Korisnik> korisnici = storageKorisnik.getAll();
-            storageKorisnik.commit();
-            for (Korisnik korisnik : korisnici) {
-                if (korisnik.getKorisnickoIme().equalsIgnoreCase(username) && korisnik.getSifra().equals(password)) {
-                    return korisnik;
-                }
+        KorisniciSO korisniciSO = new KorisniciSO();
+        korisniciSO.execute(k);
+        ArrayList<OpstiDomenskiObjekat> korisnici = korisniciSO.getListaKorisnika();
 
+        for (OpstiDomenskiObjekat opstiDomenskiObjekat : korisnici) {
+            if (opstiDomenskiObjekat.equals(k)) {
+                return opstiDomenskiObjekat;
             }
-            throw new Exception("Nepoznat korisnik!");
-        } catch (SQLException e) {
-            storageKorisnik.rollback();
-            throw e;
-        } finally {
-            storageKorisnik.disconnect();
         }
+
+        throw new Exception("Nepoznat korisnik!");
 
     }
 
@@ -97,7 +92,7 @@ public class Kontroler {
             dodajAutomobilSO.execute(a);
 
         } catch (Exception e) {
-            throw e;
+            throw new Exception("Automobil sa registarskom oznakom:" + a.getRegistracioniBroj() + " vec postoji u sistemu!");
         }
 
 //        storageAutomobil.connect();
@@ -158,10 +153,10 @@ public class Kontroler {
 //        }
     }
 
-    public List<Automobil> getStorageAutomobili() throws Exception {
+    public ArrayList<OpstiDomenskiObjekat> getStorageAutomobili(Automobil a) throws Exception {
         GetAllCarsSO vratiSveAutomobileSO = new GetAllCarsSO();
         try {
-            vratiSveAutomobileSO.execute(null);
+            vratiSveAutomobileSO.execute(a);
         } catch (Exception e) {
             throw e;
         }
@@ -172,16 +167,23 @@ public class Kontroler {
         return storageVozac.getAll();
     }
 
-    public List<TipAutomobila> getStorageTipovi() throws SQLException {
-        return storageTipovi.getAll();
-    }
-
-    public Automobil getAutomobilByRegBroj(String RegBroj) throws Exception {
-        FindCarSO nadjiAuto = new FindCarSO();
-        try {
-            nadjiAuto.execute(RegBroj);
+    public List<OpstiDomenskiObjekat> getStorageTipovi(TipAutomobila t) throws Exception {
+//        return storageTipovi.getAll();
+            GetTipoviSO vratiSveTipove = new GetTipoviSO();
+            try {
+            vratiSveTipove.execute(t);
         } catch (Exception e) {
             throw e;
+        }
+        return vratiSveTipove.getListaTipova();
+    }
+
+    public OpstiDomenskiObjekat getAutomobilByRegBroj(Automobil a) throws Exception {
+        FindCarSO nadjiAuto = new FindCarSO();
+        try {
+            nadjiAuto.execute(a);
+        } catch (Exception e) {
+            throw new Exception("Automobil sa registracionim brojem " + a.getRegistracioniBroj() + " ne postoji u sistemu!");
         }
         return nadjiAuto.getAutomobil();
 //        Automobil auto = new Automobil();
@@ -209,7 +211,7 @@ public class Kontroler {
             dodajPotvrduSO.execute(potvrda);
 
         } catch (Exception e) {
-            throw e;
+            throw new Exception("Potvrda sa id: " + potvrda.getPotvrdaID() + " vec postoji u sistemu!");
         }
 //        storagePotvrda.connect();
 //        try {
@@ -228,29 +230,18 @@ public class Kontroler {
 
     }
 
-    public void dodajSvePotvrde(List<PotvrdaOIznajmljivanju> potvrde) throws SQLException {
-        storagePotvrda.connect();
-        try {
-            storagePotvrda.addAll(potvrde);
-            storagePotvrda.commit();
-        } catch (SQLException e) {
-            storagePotvrda.rollback();
-            throw e;
-        } finally {
-            storagePotvrda.disconnect();
-        }
-    }
+   
 
-    public PotvrdaOIznajmljivanju getPotvrdaByID(int id) throws Exception {
-            FindPotvrdaSO pronadjiPotvrduSO = new FindPotvrdaSO();
+    public OpstiDomenskiObjekat getPotvrdaByID(PotvrdaOIznajmljivanju p) throws Exception {
+        FindPotvrdaSO pronadjiPotvrduSO = new FindPotvrdaSO();
         try {
-            pronadjiPotvrduSO.execute(id);
+            pronadjiPotvrduSO.execute(p);
 
         } catch (Exception e) {
-            throw e;
+            throw new Exception("Potvrda sa ID:" + p.getPotvrdaID() + " ne postoji u sistemu");
         }
         return pronadjiPotvrduSO.getPotvrda();
-        
+
 //        PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
 //        try {
 //            storagePotvrda.connect();
@@ -309,10 +300,10 @@ public class Kontroler {
 //        }
     }
 
-    public List<PotvrdaOIznajmljivanju> getPotvrde() throws Exception {
+    public List<OpstiDomenskiObjekat> getPotvrde(PotvrdaOIznajmljivanju p) throws Exception {
         GetPotvrdeSO vratiPotvrdeSO = new GetPotvrdeSO();
         try {
-            vratiPotvrdeSO.execute(null);
+            vratiPotvrdeSO.execute(p);
 
         } catch (Exception e) {
             throw e;

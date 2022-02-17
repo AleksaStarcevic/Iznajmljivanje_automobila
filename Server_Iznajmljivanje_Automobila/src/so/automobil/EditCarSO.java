@@ -6,6 +6,7 @@
 package so.automobil;
 
 import domen.Automobil;
+import domen.OpstiDomenskiObjekat;
 import repository.impl.RepositoryAutomobil;
 import so.AbstractSO;
 
@@ -13,42 +14,18 @@ import so.AbstractSO;
  *
  * @author aleks
  */
-public class EditCarSO extends AbstractSO{
-     private final RepositoryAutomobil storageAutomobil;
-
-    public EditCarSO() {
-        this.storageAutomobil = new RepositoryAutomobil();
-    }
-
-   
-
+public class EditCarSO extends AbstractSO {
+    
     @Override
     protected void precondition(Object param) throws Exception {
         if (param == null || !(param instanceof Automobil)) {
             throw new Exception("Pogresan param");
         }
     }
-
+    
     @Override
     protected void executeOperation(Object param) throws Exception {
-        storageAutomobil.edit((Automobil) param);
-    }
-    
-     @Override
-    protected void commitTransaction() throws Exception {
-        storageAutomobil.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storageAutomobil.rollback();
-    }
-
-  
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storageAutomobil.disconnect();
+        brokerBaze.izmeni((OpstiDomenskiObjekat) param);
     }
     
 }

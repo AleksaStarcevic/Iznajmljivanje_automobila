@@ -31,6 +31,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     public PretragaAutomobila() {
         initComponents();
         prepareTable();
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -141,7 +142,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
         try {
             prepareTable();
-            String regBroj = txtPretraga.getText();
+            String regBroj = txtPretraga.getText().toUpperCase();
             pretrazenAuto = Kontroler.getInstanca().getAutomobilByRegBroj(regBroj);
             System.out.println(pretrazenAuto);
             refreshTable(pretrazenAuto);
@@ -213,6 +214,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new PretragaAutomobila().setVisible(true);
+                
             }
         });
     }

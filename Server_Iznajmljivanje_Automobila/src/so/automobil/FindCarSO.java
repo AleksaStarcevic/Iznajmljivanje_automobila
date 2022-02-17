@@ -6,6 +6,8 @@
 package so.automobil;
 
 import domen.Automobil;
+import domen.OpstiDomenskiObjekat;
+import java.util.ArrayList;
 import repository.impl.RepositoryAutomobil;
 import so.AbstractSO;
 
@@ -15,44 +17,30 @@ import so.AbstractSO;
  */
 public class FindCarSO extends AbstractSO {
 
-    private final RepositoryAutomobil storageAutomobil;
-    Automobil automobil;
-
-    public FindCarSO() {
-        this.storageAutomobil = new RepositoryAutomobil();
-    }
+    OpstiDomenskiObjekat automobil;
 
     @Override
     protected void precondition(Object param) throws Exception {
-      
+        if (param == null || !(param instanceof Automobil)) {
+            throw new Exception("Pogresan param");
+        }
+
+        ArrayList<OpstiDomenskiObjekat> lista = (ArrayList<OpstiDomenskiObjekat>) brokerBaze.vratiSve((OpstiDomenskiObjekat) param);
+        
+        if (!lista.contains((OpstiDomenskiObjekat) param)) {
+            throw new Exception();
+        }
 
     }
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        automobil = storageAutomobil.getByID(param.toString());
-        if (automobil.getRegistracioniBroj() == null) {
-            throw new Exception("Automobil sa registracionim brojem " + param.toString() + " ne postoji u sistemu!");
-        }
+        automobil = brokerBaze.pronadji((OpstiDomenskiObjekat) param);
+
     }
 
-    public Automobil getAutomobil() {
+    public OpstiDomenskiObjekat getAutomobil() {
         return automobil;
-    }
-
-    @Override
-    protected void commitTransaction() throws Exception {
-        storageAutomobil.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storageAutomobil.rollback();
-    }
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storageAutomobil.disconnect();
     }
 
 }

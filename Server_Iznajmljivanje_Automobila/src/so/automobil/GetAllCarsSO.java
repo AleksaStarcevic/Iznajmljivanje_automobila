@@ -6,7 +6,9 @@
 package so.automobil;
 
 import domen.Automobil;
+import domen.OpstiDomenskiObjekat;
 import domen.TipAutomobila;
+import java.util.ArrayList;
 import java.util.List;
 import repository.impl.RepositoryAutomobil;
 import so.AbstractSO;
@@ -16,47 +18,32 @@ import so.AbstractSO;
  * @author aleks
  */
 public class GetAllCarsSO extends AbstractSO{
-private final RepositoryAutomobil storageAutomobil;
-private List<Automobil> listaAutomobila;
 
-    public GetAllCarsSO() {
-        this.storageAutomobil = new RepositoryAutomobil();
-    }
+private ArrayList<OpstiDomenskiObjekat> listaAutomobila;
+
+   
 
 
     @Override
     protected void precondition(Object param) throws Exception {
-       
+       if (param == null || !(param instanceof Automobil)) {
+            throw new Exception("Pogresan parametar");
+        }
     }
 
    
     
      @Override
     protected void executeOperation(Object param) throws Exception {
-         listaAutomobila = storageAutomobil.getAll();
+         listaAutomobila = (ArrayList<OpstiDomenskiObjekat>) brokerBaze.vratiSve((OpstiDomenskiObjekat)param);
     }
 
-    public List<Automobil> getListaAutomobila() {
+    public ArrayList<OpstiDomenskiObjekat> getListaAutomobila() {
         return listaAutomobila;
     }
     
     
 
-    @Override
-    protected void commitTransaction() throws Exception {
-        storageAutomobil.commit();
-    }
-
-    @Override
-    protected void rollbackTransaction() throws Exception {
-        storageAutomobil.rollback();
-    }
-
-  
-
-    @Override
-    protected void closeConnection() throws Exception {
-        storageAutomobil.disconnect();
-    }
+   
     
 }
