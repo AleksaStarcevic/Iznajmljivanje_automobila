@@ -12,14 +12,9 @@ import domen.PotvrdaOIznajmljivanju;
 import domen.TipAutomobila;
 import domen.Vozac;
 
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
-import repository.impl.RepositoryAutomobil;
-import repository.impl.RepositoryKorisnik;
-import repository.impl.RepositoryPotvrda;
-import repository.impl.RepositoryTipovi;
-import repository.impl.RepositoryVozac;
 import so.AbstractSO;
 import so.automobil.AddCarSO;
 import so.automobil.DeleteCarSO;
@@ -33,6 +28,10 @@ import so.potvrda.EditPotvrdaSO;
 import so.potvrda.FindPotvrdaSO;
 import so.potvrda.GetPotvrdeSO;
 import so.tipovi.GetTipoviSO;
+import so.vozac.AddVozacSO;
+import so.vozac.EditVozacSO;
+import so.vozac.FindVozacSO;
+import so.vozac.GetVozaciSO;
 
 /**
  *
@@ -41,21 +40,21 @@ import so.tipovi.GetTipoviSO;
 public class Kontroler {
 
     private static Kontroler instanca;
-    private final RepositoryKorisnik storageKorisnik;
-    private final RepositoryAutomobil storageAutomobil;
-    private final RepositoryPotvrda storagePotvrda;
-    private final RepositoryVozac storageVozac;
-    private final RepositoryTipovi storageTipovi;
+//    private final RepositoryKorisnik storageKorisnik;
+//    private final RepositoryAutomobil storageAutomobil;
+//    private final RepositoryPotvrda storagePotvrda;
+//    private final RepositoryVozac storageVozac;
+//    private final RepositoryTipovi storageTipovi;
 
     private Korisnik ulogovaniKorisnik;
     private List<Korisnik> prijavljeni;
 
     private Kontroler() {
-        this.storageKorisnik = new RepositoryKorisnik();
-        this.storageAutomobil = new RepositoryAutomobil();
-        this.storagePotvrda = new RepositoryPotvrda();
-        this.storageVozac = new RepositoryVozac();
-        this.storageTipovi = new RepositoryTipovi();
+//        this.storageKorisnik = new RepositoryKorisnik();
+//        this.storageAutomobil = new RepositoryAutomobil();
+//        this.storagePotvrda = new RepositoryPotvrda();
+//        this.storageVozac = new RepositoryVozac();
+//        this.storageTipovi = new RepositoryTipovi();
         this.prijavljeni = new ArrayList<>();
     }
 
@@ -68,6 +67,14 @@ public class Kontroler {
 
     public List<Korisnik> getPrijavljeni() {
         return prijavljeni;
+    }
+
+    public void setUlogovaniKorisnik(Korisnik ulogovaniKorisnik) {
+        this.ulogovaniKorisnik = ulogovaniKorisnik;
+    }
+
+    public Korisnik getUlogovaniKorisnik() {
+        return ulogovaniKorisnik;
     }
 
     public OpstiDomenskiObjekat login(Korisnik k) throws Exception {
@@ -163,14 +170,20 @@ public class Kontroler {
         return vratiSveAutomobileSO.getListaAutomobila();
     }
 
-    public List<Vozac> getStorageVozac() throws SQLException {
-        return storageVozac.getAll();
+    public List<OpstiDomenskiObjekat> getStorageVozac(Vozac v) throws Exception {
+        GetVozaciSO vratiSveVozaceSO = new GetVozaciSO();
+        try {
+            vratiSveVozaceSO.execute(v);
+        } catch (Exception e) {
+            throw e;
+        }
+        return vratiSveVozaceSO.getListaVozaca();
     }
 
     public List<OpstiDomenskiObjekat> getStorageTipovi(TipAutomobila t) throws Exception {
 //        return storageTipovi.getAll();
-            GetTipoviSO vratiSveTipove = new GetTipoviSO();
-            try {
+        GetTipoviSO vratiSveTipove = new GetTipoviSO();
+        try {
             vratiSveTipove.execute(t);
         } catch (Exception e) {
             throw e;
@@ -211,6 +224,7 @@ public class Kontroler {
             dodajPotvrduSO.execute(potvrda);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Potvrda sa id: " + potvrda.getPotvrdaID() + " vec postoji u sistemu!");
         }
 //        storagePotvrda.connect();
@@ -230,14 +244,13 @@ public class Kontroler {
 
     }
 
-   
-
     public OpstiDomenskiObjekat getPotvrdaByID(PotvrdaOIznajmljivanju p) throws Exception {
         FindPotvrdaSO pronadjiPotvrduSO = new FindPotvrdaSO();
         try {
             pronadjiPotvrduSO.execute(p);
 
         } catch (Exception e) {
+            System.out.println(e);
             throw new Exception("Potvrda sa ID:" + p.getPotvrdaID() + " ne postoji u sistemu");
         }
         return pronadjiPotvrduSO.getPotvrda();
@@ -313,28 +326,33 @@ public class Kontroler {
 
     public void dodajVozaca(Vozac v) throws Exception {
         try {
-            storageVozac.connect();
-            if (!storageVozac.getAll().contains(v)) {
-                storageVozac.add(v);
-                storageVozac.commit();
+            AbstractSO dodajVozacaSO = new AddVozacSO();
+            dodajVozacaSO.execute(v);
 
-            } else {
-                throw new Exception("Vozac vec sa id:" + v.getVozacID() + " vec postoji u sistemu!");
-            }
-        } catch (Exception ex) {
-            storageVozac.rollback();
-            throw ex;
-        } finally {
-            storagePotvrda.disconnect();
+        } catch (Exception e) {
+            throw new Exception("Vozac sa id: " + v.getVozacID()+ " vec postoji u sistemu!");
         }
     }
 
-    public void setUlogovaniKorisnik(Korisnik ulogovaniKorisnik) {
-        this.ulogovaniKorisnik = ulogovaniKorisnik;
+    public OpstiDomenskiObjekat pronadjiVozaca(Vozac vozac) throws Exception {
+        FindVozacSO pronadjiVozacaSO = new FindVozacSO();
+        try {
+            pronadjiVozacaSO.execute(vozac);
+
+        } catch (Exception e) {
+            throw new Exception("Vozac sa id:" + vozac.getVozacID()+ " ne postoji u sistemu");
+        }
+        return pronadjiVozacaSO.getVozac();
     }
 
-    public Korisnik getUlogovaniKorisnik() {
-        return ulogovaniKorisnik;
+    public void izmeniVozaca(Vozac vozac) throws Exception {
+        try {
+            AbstractSO izmeniVozacaSO = new EditVozacSO();
+            izmeniVozacaSO.execute(vozac);
+
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }

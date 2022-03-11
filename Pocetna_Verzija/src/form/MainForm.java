@@ -36,8 +36,6 @@ public class MainForm extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         menuPotvrda = new javax.swing.JMenu();
         itemPotvrda = new javax.swing.JMenuItem();
-        itemPrikaz = new javax.swing.JMenuItem();
-        itemTabelaPotvrda = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -87,23 +85,12 @@ public class MainForm extends javax.swing.JFrame {
         });
         menuPotvrda.add(itemPotvrda);
 
-        itemPrikaz.setText("Prikaz");
-        itemPrikaz.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemPrikazActionPerformed(evt);
-            }
-        });
-        menuPotvrda.add(itemPrikaz);
-
-        itemTabelaPotvrda.setText("Tabela potvrda");
-        itemTabelaPotvrda.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                itemTabelaPotvrdaActionPerformed(evt);
-            }
-        });
-        menuPotvrda.add(itemTabelaPotvrda);
-
         jMenuItem6.setText("Pretrazi potvrdu");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         menuPotvrda.add(jMenuItem6);
 
         jMenuBar1.add(menuPotvrda);
@@ -128,14 +115,6 @@ public class MainForm extends javax.swing.JFrame {
         new UnosPotvrde().setVisible(true);
     }//GEN-LAST:event_itemPotvrdaActionPerformed
 
-    private void itemPrikazActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemPrikazActionPerformed
-       new PrikazPotvrda(this, true).setVisible(true);
-    }//GEN-LAST:event_itemPrikazActionPerformed
-
-    private void itemTabelaPotvrdaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemTabelaPotvrdaActionPerformed
-        new FrmPotvrdaTM(this, true).setVisible(true);
-    }//GEN-LAST:event_itemTabelaPotvrdaActionPerformed
-
     private void itemDodajAutomobilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemDodajAutomobilActionPerformed
       new UnosAutomobila(this, rootPaneCheckingEnabled).setVisible(true);
     }//GEN-LAST:event_itemDodajAutomobilActionPerformed
@@ -147,6 +126,10 @@ public class MainForm extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
        new UnosVozaca().setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+       new PretragaPotvrde(this, rootPaneCheckingEnabled).setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,8 +170,6 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemDodajAutomobil;
     private javax.swing.JMenuItem itemPotvrda;
     private javax.swing.JMenuItem itemPretraziAutomobil;
-    private javax.swing.JMenuItem itemPrikaz;
-    private javax.swing.JMenuItem itemTabelaPotvrda;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;

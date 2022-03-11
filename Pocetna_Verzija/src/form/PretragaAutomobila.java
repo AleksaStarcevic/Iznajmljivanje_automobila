@@ -161,6 +161,8 @@ public class PretragaAutomobila extends javax.swing.JFrame {
             //osvezi tabelu
             prepareTable();
 
+        }else{
+            JOptionPane.showMessageDialog(this, "Morate prvo pretraziti automobil!");
         }
     }//GEN-LAST:event_btnIzmeniActionPerformed
 
@@ -175,6 +177,8 @@ public class PretragaAutomobila extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, ex.getMessage());
                 prepareTable();
             }
+        }else{
+            JOptionPane.showMessageDialog(this, "Morate prvo pretraziti automobil!");
         }
     }//GEN-LAST:event_btnObrisiActionPerformed
 

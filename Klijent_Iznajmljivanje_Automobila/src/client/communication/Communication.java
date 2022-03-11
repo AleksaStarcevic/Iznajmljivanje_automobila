@@ -140,6 +140,24 @@ public class Communication {
         
         return (Response) new Receiver(socket).receive();
     }
+
+    public Response addDriver(Request request) {
+        new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
+
+    public Response getDriverById(Request request) {
+        new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
+
+    public Response editDriver(Request request) {
+        new Sender(socket).send(request);
+        
+        return (Response) new Receiver(socket).receive();
+    }
     
     
     

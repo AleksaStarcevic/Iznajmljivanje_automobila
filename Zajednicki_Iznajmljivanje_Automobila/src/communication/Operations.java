@@ -23,5 +23,8 @@ public class Operations {
     public static final int FIND_CONFIRMATION=11;
     public static final int EDIT_CONFIRMATION=12;
     public static final int DELETE_CONFIRMATION=13;
+    public static final int ADD_DRIVER=14;
+    public static final int FIND_DRIVER=15;
+    public static final int EDIT_DRIVER=16;
     
 }

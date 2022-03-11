@@ -7,6 +7,7 @@ package so.potvrda;
 
 import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
+import domen.TerminVoznje;
 import java.util.ArrayList;
 
 import so.AbstractSO;
@@ -31,7 +32,12 @@ public class AddPotvrdaSO extends AbstractSO {
 
     @Override
     protected void executeOperation(Object param) throws Exception {
+        PotvrdaOIznajmljivanju potvrda = (PotvrdaOIznajmljivanju)param;
         brokerBaze.ubaci((OpstiDomenskiObjekat) param);
+        for (TerminVoznje termin : potvrda.getTermini()) {
+            brokerBaze.ubaci(termin);
+        }
+        
     }
 
 }

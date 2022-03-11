@@ -32,6 +32,7 @@ public class PretragaAutomobila extends javax.swing.JFrame {
         initComponents();
         prepareTable();
         setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        lblErrorPretraga.setVisible(false);
     }
 
     /**
@@ -140,8 +141,17 @@ public class PretragaAutomobila extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPretragaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretragaActionPerformed
-        try {
+        lblErrorPretraga.setVisible(false);
+        if (txtPretraga.getText().isEmpty()) {
+            lblErrorPretraga.setVisible(true);
+            lblErrorPretraga.setText("Unesi registracioni broj za pretragu");
             prepareTable();
+            return;
+        }
+        
+        
+        try {
+            
             String regBroj = txtPretraga.getText().toUpperCase();
             pretrazenAuto = Kontroler.getInstanca().getAutomobilByRegBroj(regBroj);
             System.out.println(pretrazenAuto);

@@ -174,7 +174,7 @@ public class Kontroler {
     public void dodajSvePotvrde(List<PotvrdaOIznajmljivanju> potvrde) throws SQLException {
         storagePotvrda.connect();
         try {
-            storagePotvrda.addAll(potvrde);
+//            storagePotvrda.addAll(potvrde);
             storagePotvrda.commit();
         } catch (SQLException e) {
             storagePotvrda.rollback();
@@ -223,6 +223,7 @@ public class Kontroler {
             throw new Exception("Uspesno brisanje potvrde!");
         } catch (SQLException ex) {
             storagePotvrda.rollback();
+            System.out.println(ex);
             throw new Exception("Neuspesno brisanje potvrde!");
         } finally {
             storagePotvrda.disconnect();

@@ -26,8 +26,10 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
     private Automobil automobil;
     private Vozac vozac;
     private Korisnik korisnik;
+    private List<TerminVoznje> termini;
 
     public PotvrdaOIznajmljivanju() {
+        termini = new ArrayList<>();
     }
 
     public PotvrdaOIznajmljivanju(int potvrdaID, Date datumOD, Date datumDO, double cena, Automobil automobil, Vozac vozac, Korisnik korisnik) {
@@ -38,6 +40,25 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
         this.automobil = automobil;
         this.vozac = vozac;
         this.korisnik = korisnik;
+    }
+
+    public PotvrdaOIznajmljivanju(int potvrdaID, Date datumOD, Date datumDO, double cena, Automobil automobil, Vozac vozac, Korisnik korisnik, List<TerminVoznje> termini) {
+        this.potvrdaID = potvrdaID;
+        this.datumOD = datumOD;
+        this.datumDO = datumDO;
+        this.cena = cena;
+        this.automobil = automobil;
+        this.vozac = vozac;
+        this.korisnik = korisnik;
+        this.termini = termini;
+    }
+
+    public List<TerminVoznje> getTermini() {
+        return termini;
+    }
+
+    public void setTermini(List<TerminVoznje> termini) {
+        this.termini = termini;
     }
 
     public double getCena() {
@@ -98,7 +119,7 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
 
     @Override
     public String toString() {
-        return "PotvrdaOIznajmljivanju{" + "potvrdaID=" + potvrdaID + ", datumOD=" + datumOD + ", datumDO=" + datumDO + ", cena=" + cena + ", automobil=" + automobil + ", vozac=" + vozac + ", korisnik=" + korisnik + '}';
+        return "PotvrdaOIznajmljivanju{" + "potvrdaID=" + potvrdaID + ", datumOD=" + datumOD + ", datumDO=" + datumDO + ", cena=" + cena + ", automobil=" + automobil + ", vozac=" + vozac + ", korisnik=" + korisnik + ", termini=" + termini + '}';
     }
 
     @Override
@@ -128,12 +149,12 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
 
     @Override
     public String vratiVrednostiAtributa() {
-        return potvrdaID + ", " + (datumOD == null ? null : "'" + new java.sql.Date(datumOD.getTime()) + "'") + ", " + (datumDO == null ? null : "'" + new java.sql.Date(datumDO.getTime()) + "'") + ", " + (cena < 0 ? null : cena) + ", " + (automobil == null ? null : "'" + automobil.getRegistracioniBroj() + "'") + ", " + (vozac == null ? null : vozac.getVozacID()) + ", " + (korisnik == null ? null :  korisnik.getKorisnikID());
+        return potvrdaID + ", " + (datumOD == null ? null : "'" + new java.sql.Date(datumOD.getTime()) + "'") + ", " + (datumDO == null ? null : "'" + new java.sql.Date(datumDO.getTime()) + "'") + ", " + (cena < 0 ? null : cena) + ", " + (automobil == null ? null : "'" + automobil.getRegistracioniBroj() + "'") + ", " + (vozac == null ? null : vozac.getVozacID()) + ", " + (korisnik == null ? null : korisnik.getKorisnikID());
     }
 
     @Override
     public String postaviVrednostAtrbuta() {
-        return "potvrdaID=" + potvrdaID + ", datumOD=" + (datumOD == null ? null : "'" + datumOD + "'") + ", datumDO=" + (datumDO == null ? null : "'" + datumDO + "'") + ", cena=" + (cena < 0 ? null : cena) + ", automobil=" + (automobil == null ? null : "'" + automobil.getRegistracioniBroj() + "'") + ", vozac=" + (vozac == null ? null :  vozac.getVozacID()) + ", korisnik=" + (korisnik == null ? null :  korisnik.getKorisnikID());
+        return "potvrdaID=" + potvrdaID + ", datumOD=" + (datumOD == null ? null : "'" + new java.sql.Date(datumOD.getTime()) + "'") + ", datumDO=" + (datumDO == null ? null : "'" + new java.sql.Date(datumDO.getTime()) + "'") + ", cena=" + (cena < 0 ? null : cena) + ", automobil=" + (automobil == null ? null : "'" + automobil.getRegistracioniBroj() + "'") + ", vozac=" + (vozac == null ? null : vozac.getVozacID()) + ", korisnik=" + (korisnik == null ? null : korisnik.getKorisnikID());
     }
 
     @Override
@@ -188,8 +209,6 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
                 potvrda.setAutomobil(automobil);
                 potvrda.setVozac(vozac);
                 potvrda.setKorisnik(korisnik);
-
-               
 
             }
             return potvrda;
@@ -250,7 +269,10 @@ public class PotvrdaOIznajmljivanju implements Serializable, OpstiDomenskiObjeka
 
     @Override
     public String vratiTabeluSaUslovomSpajanja() {
-        return " p JOIN automobil a ON p.automobil = a.registracioniBroj JOIN vozac v ON p.vozac = v.vozacID JOIN korisnik k ON p.korisnik=k.korisnikID JOIN tipautomobila t ON a.tip=t.tipID";
+        return " p JOIN automobil a ON p.automobil = a.registracioniBroj "
+                + "JOIN vozac v ON p.vozac = v.vozacID "
+                + "JOIN korisnik k ON p.korisnik=k.korisnikID "
+                + "JOIN tipautomobila t ON a.tip=t.tipID";
     }
 
 }

@@ -25,23 +25,23 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author aleks
  */
-public class HandleClientsThread extends Thread{
+public class HandleClientsThread extends Thread {
+
     private Socket socket;
     private Korisnik prijavljeniKorisnik;
 
     public HandleClientsThread(Socket socket) {
         this.socket = socket;
-       
+
     }
 
     @Override
     public void run() {
-        while(!socket.isClosed()){
+        while (!socket.isClosed()) {
             try {
                 Request request = (Request) new Receiver(socket).receive();
                 Response response = new Response();
@@ -90,6 +90,16 @@ public class HandleClientsThread extends Thread{
                     case Operations.EDIT_CONFIRMATION:
                         response = editConfirmation(request);
                         break;
+                    case Operations.ADD_DRIVER:
+                        response = addDriver(request);
+                        break;
+                    case Operations.FIND_DRIVER:
+                         response = findDriver(request);
+                         break;
+                         case Operations.EDIT_DRIVER:
+                         response = editDriver(request);
+                         break;
+                    
 
                     default:
                 }
@@ -102,7 +112,7 @@ public class HandleClientsThread extends Thread{
 
             }
         }
-        
+
     }
 
     public Socket getSocket() {
@@ -113,24 +123,18 @@ public class HandleClientsThread extends Thread{
         return prijavljeniKorisnik;
     }
 
-    
-    
-    
-    
-    
-    
-     private Response login(Request request) {
+    private Response login(Request request) {
         Response response = new Response();
         Korisnik requestKorisnik = (Korisnik) request.getArgument();
-        
+
         try {
-            
+
             Korisnik korisnik = (Korisnik) Kontroler.getInstanca().login(requestKorisnik);
-            if(Kontroler.getInstanca().getPrijavljeni().contains(korisnik)){
-                throw new Exception("Korisnik "+korisnik.getKorisnickoIme()+" je vec ulogovan na sistem!");
+            if (Kontroler.getInstanca().getPrijavljeni().contains(korisnik)) {
+                throw new Exception("Korisnik " + korisnik.getKorisnickoIme() + " je vec ulogovan na sistem!");
             }
             Kontroler.getInstanca().getPrijavljeni().add(korisnik);
-            
+
             System.out.println("Uspesna prijava");
             prijavljeniKorisnik = korisnik;
             response.setResponseType(ResponseType.SUCCESS);
@@ -191,7 +195,7 @@ public class HandleClientsThread extends Thread{
         Response response = new Response();
         ArrayList<OpstiDomenskiObjekat> automobili;
         try {
-            automobili =  Kontroler.getInstanca().getStorageAutomobili(new Automobil());
+            automobili = Kontroler.getInstanca().getStorageAutomobili(new Automobil());
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(automobili);
         } catch (Exception ex) {
@@ -230,12 +234,12 @@ public class HandleClientsThread extends Thread{
 
     private Response getDrivers() {
         Response response = new Response();
-        ArrayList<Vozac> vozaci = new ArrayList<>();
+        ArrayList<OpstiDomenskiObjekat> vozaci = new ArrayList<>();
         try {
-            vozaci = (ArrayList<Vozac>) Kontroler.getInstanca().getStorageVozac();
+            vozaci = (ArrayList<OpstiDomenskiObjekat>) Kontroler.getInstanca().getStorageVozac(new Vozac());
             response.setResponseType(ResponseType.SUCCESS);
             response.setResult(vozaci);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             response.setResponseType(ResponseType.ERROR);
             response.setException(ex);
         }
@@ -313,10 +317,51 @@ public class HandleClientsThread extends Thread{
         return response;
     }
 
-    
-    
-    
-    
-    
-    
+    private Response addDriver(Request request) {
+          Response response = new Response();
+        Vozac v = (Vozac) request.getArgument();
+        try {
+            Kontroler.getInstanca().dodajVozaca(v);
+            response.setResponseType(ResponseType.SUCCESS);
+
+        } catch (Exception ex) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(ex);
+        }
+        return response;
+    }
+
+    private Response findDriver(Request request) {
+         Response response = new Response();
+        int id  = (int) request.getArgument();
+        Vozac vozac = new Vozac();
+        vozac.setVozacID(id);
+        try {
+            OpstiDomenskiObjekat v = Kontroler.getInstanca().pronadjiVozaca(vozac);
+            response.setResponseType(ResponseType.SUCCESS);
+            response.setResult(v);
+
+        } catch (Exception ex) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(ex);
+        }
+        return response;
+    }
+
+    private Response editDriver(Request request) {
+        Response response = new Response();
+        Vozac vozac = (Vozac) request.getArgument();
+        try {
+            Kontroler.getInstanca().izmeniVozaca(vozac);
+            response.setResponseType(ResponseType.SUCCESS);
+
+        } catch (Exception ex) {
+            response.setResponseType(ResponseType.ERROR);
+            response.setException(ex);
+        }
+        return response;
+    }
+
+   
+
 }

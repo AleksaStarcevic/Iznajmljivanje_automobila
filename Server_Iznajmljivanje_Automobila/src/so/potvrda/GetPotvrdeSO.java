@@ -33,6 +33,12 @@ public class GetPotvrdeSO extends AbstractSO {
     @Override
     protected void executeOperation(Object param) throws Exception {
         listaPotvrda =  brokerBaze.vratiSve((OpstiDomenskiObjekat)param);
+        
+     
+        // vratim sve potvrde
+        // vratim termin na osnovu idja
+        //  prodjem kroz potvrde i napunim termine u potvrdu ako su im idjevi isti!
+        
     }
 
     public List<OpstiDomenskiObjekat> getListaPotvrda() {

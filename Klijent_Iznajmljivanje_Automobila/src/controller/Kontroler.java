@@ -194,8 +194,49 @@ public class Kontroler {
         }
     }
 
-    public void dodajVozaca(Vozac v) {
+    public void dodajVozaca(Vozac v) throws Exception {
+        Request request = new Request(Operations.ADD_DRIVER, v);
+        Response response = Communication.getInstance().addDriver(request);
+
+        if (!response.getResponseType().equals(ResponseType.SUCCESS)) {
+            throw response.getException();
+
+        }
         
+    }
+
+    public List<Vozac> getVozaci() throws Exception {
+         Request request = new Request(Operations.GET_DRIVERS);
+        Response response = Communication.getInstance().getDrivers(request);
+
+        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+            ArrayList<Vozac> vozaci = (ArrayList<Vozac>) response.getResult();
+            return vozaci;
+        } else {
+            throw response.getException();
+        }
+    }
+    
+    public Vozac getVozacByID(int id) throws Exception{
+         Request request = new Request(Operations.FIND_DRIVER, id);
+        Response response = Communication.getInstance().getDriverById(request);
+
+        if (response.getResponseType().equals(ResponseType.SUCCESS)) {
+            return (Vozac) response.getResult();
+        } else {
+            throw response.getException(); 
+        }
+        
+    }
+
+    public void izmeniVozaca(Vozac v) throws Exception {
+         Request request = new Request(Operations.EDIT_DRIVER, v);
+        Response response = Communication.getInstance().editDriver(request);
+
+        if (!response.getResponseType().equals(ResponseType.SUCCESS)) {
+            throw response.getException();
+
+        }
     }
 
 }

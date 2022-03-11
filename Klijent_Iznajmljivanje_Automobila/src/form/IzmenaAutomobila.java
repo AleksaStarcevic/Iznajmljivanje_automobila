@@ -159,7 +159,8 @@ Automobil pretrazenAuto;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
-
+            
+        
         try {
             String regBroj = txtRegistarskiBroj.getText();
             String marka = txtMarka.getText();

@@ -8,27 +8,28 @@ package form;
 import controller.Kontroler;
 import domen.Vozac;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import tableModel.TableModelVozaci;
 
 /**
  *
  * @author aleks
  */
 public class UnosVozaca extends javax.swing.JFrame {
-
+    Vozac vozacPretrazen;
     /**
      * Creates new form UnosVozaca
      */
     public UnosVozaca() {
         initComponents();
-        lblIDError.setVisible(false);
-        lblErrorIme.setVisible(false);
-        lblErrorPrezime.setVisible(false);
-        lblErrorEmail.setVisible(false);
-        lblErrorAdresa.setVisible(false);
+         prepareView();
+          setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        
     }
 
     /**
@@ -56,6 +57,13 @@ public class UnosVozaca extends javax.swing.JFrame {
         lblErrorPrezime = new javax.swing.JLabel();
         lblErrorEmail = new javax.swing.JLabel();
         lblErrorAdresa = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        txtPretraga = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblVozaci = new javax.swing.JTable();
+        btnPretrazi = new javax.swing.JButton();
+        btnIzmeni = new javax.swing.JButton();
+        lblErrorPretraga = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,6 +107,38 @@ public class UnosVozaca extends javax.swing.JFrame {
         lblErrorAdresa.setForeground(new java.awt.Color(255, 0, 0));
         lblErrorAdresa.setText("jLabel7");
 
+        jLabel6.setText("Pretrazi vozaca:");
+
+        tblVozaci.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tblVozaci);
+
+        btnPretrazi.setText("Pretrazi");
+        btnPretrazi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPretraziActionPerformed(evt);
+            }
+        });
+
+        btnIzmeni.setText("Izmeni");
+        btnIzmeni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIzmeniActionPerformed(evt);
+            }
+        });
+
+        lblErrorPretraga.setForeground(new java.awt.Color(255, 0, 0));
+        lblErrorPretraga.setText("jLabel7");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,63 +147,95 @@ public class UnosVozaca extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblErrorAdresa)
-                    .addComponent(lblErrorEmail)
-                    .addComponent(lblErrorIme)
-                    .addComponent(lblIDError)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(lblErrorPrezime)
-                            .addComponent(jLabel5))
-                        .addGap(71, 71, 71)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnSacuvaj)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                            .addComponent(txtAdresa)
-                            .addComponent(txtPrezime)
-                            .addComponent(txtIme)
-                            .addComponent(txtID))))
-                .addContainerGap(136, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel3)
+                                    .addComponent(lblErrorPrezime)
+                                    .addComponent(jLabel5))
+                                .addGap(71, 71, 71)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnSacuvaj)
+                                    .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                    .addComponent(txtAdresa)
+                                    .addComponent(txtPrezime)
+                                    .addComponent(txtIme)
+                                    .addComponent(txtID)))
+                            .addComponent(lblErrorEmail)
+                            .addComponent(lblErrorIme)
+                            .addComponent(lblIDError))
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(26, 26, 26)
+                                .addComponent(txtPretraga, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnPretrazi))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblErrorPretraga))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnIzmeni)))))
+                .addContainerGap(184, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblIDError)
-                .addGap(2, 2, 2)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(8, 8, 8)
-                .addComponent(lblErrorIme)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addComponent(lblErrorPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblErrorEmail)
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtAdresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addComponent(lblErrorAdresa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSacuvaj)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblIDError)
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(8, 8, 8)
+                        .addComponent(lblErrorIme)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(txtPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(3, 3, 3)
+                        .addComponent(lblErrorPrezime, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblErrorEmail)
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(txtAdresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2)
+                        .addComponent(lblErrorAdresa)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSacuvaj))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(txtPretraga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnPretrazi))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblErrorPretraga)
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnIzmeni))))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
 
         pack();
@@ -193,7 +265,40 @@ public class UnosVozaca extends javax.swing.JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Neuspesan unos vozaca!\n" + ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
         }
+        popuniTabelu();
     }//GEN-LAST:event_btnSacuvajActionPerformed
+
+    private void btnPretraziActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPretraziActionPerformed
+       lblErrorPretraga.setVisible(false);
+        if (txtPretraga.getText().isEmpty()) {
+            lblErrorPretraga.setVisible(true);
+            lblErrorPretraga.setText("Unesi id za pretragu");
+            popuniTabelu();
+            return;
+        }
+        try {
+            int id = Integer.parseInt(txtPretraga.getText());
+            vozacPretrazen = Kontroler.getInstanca().getVozacByID(id);
+            prikaziVozaca(vozacPretrazen);
+            JOptionPane.showMessageDialog(this, "Vozac je pronadjen!");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Greska", JOptionPane.ERROR_MESSAGE);
+            popuniTabelu();
+        }
+        
+        
+    }//GEN-LAST:event_btnPretraziActionPerformed
+
+    private void btnIzmeniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIzmeniActionPerformed
+        if (vozacPretrazen != null) {
+
+            IzmenaVozaca izmena = new IzmenaVozaca(this, true);
+            izmena.setVozac(vozacPretrazen);
+            izmena.setVisible(true);
+
+        }
+        popuniTabelu();
+    }//GEN-LAST:event_btnIzmeniActionPerformed
 
     /**
      * @param args the command line arguments
@@ -231,21 +336,28 @@ public class UnosVozaca extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnIzmeni;
+    private javax.swing.JButton btnPretrazi;
     private javax.swing.JButton btnSacuvaj;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblErrorAdresa;
     private javax.swing.JLabel lblErrorEmail;
     private javax.swing.JLabel lblErrorIme;
+    private javax.swing.JLabel lblErrorPretraga;
     private javax.swing.JLabel lblErrorPrezime;
     private javax.swing.JLabel lblIDError;
+    private javax.swing.JTable tblVozaci;
     private javax.swing.JTextField txtAdresa;
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtIme;
+    private javax.swing.JTextField txtPretraga;
     private javax.swing.JTextField txtPrezime;
     // End of variables declaration//GEN-END:variables
 
@@ -292,6 +404,33 @@ public boolean validacija() {
        
 
         return prazno;
+    }
+
+    private void prepareView() {
+        lblIDError.setVisible(false);
+        lblErrorIme.setVisible(false);
+        lblErrorPrezime.setVisible(false);
+        lblErrorEmail.setVisible(false);
+        lblErrorAdresa.setVisible(false);
+        lblErrorPretraga.setVisible(false);
+        popuniTabelu();
+    }
+
+    private void popuniTabelu() {
+        try {
+            List<Vozac> vozaci = Kontroler.getInstanca().getVozaci();
+            TableModelVozaci tmv = new TableModelVozaci((ArrayList<Vozac>) vozaci);
+            tblVozaci.setModel(tmv);
+
+        } catch (Exception ex) {
+            Logger.getLogger(UnosPotvrde.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     private void prikaziVozaca(Vozac vozac) {
+        List<Vozac> vozaci = new ArrayList<>();
+        vozaci.add(vozac);
+        TableModelVozaci tmv = new TableModelVozaci((ArrayList<Vozac>) vozaci);
+         tblVozaci.setModel(tmv);
     }
 
 

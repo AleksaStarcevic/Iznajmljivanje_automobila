@@ -7,8 +7,8 @@ package so.potvrda;
 
 import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
+import domen.TerminVoznje;
 import java.util.ArrayList;
-import repository.impl.RepositoryPotvrda;
 import so.AbstractSO;
 
 /**
@@ -35,8 +35,12 @@ public class FindPotvrdaSO extends AbstractSO {
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        potvrda = brokerBaze.pronadji((OpstiDomenskiObjekat) param);
-
+       TerminVoznje terminVoznje = new TerminVoznje(); 
+       PotvrdaOIznajmljivanju potv = (PotvrdaOIznajmljivanju) param;
+       terminVoznje.setPotvrda(potv);
+        potvrda = brokerBaze.pronadji(terminVoznje);
+       
+        
     }
 
     public OpstiDomenskiObjekat getPotvrda() {
