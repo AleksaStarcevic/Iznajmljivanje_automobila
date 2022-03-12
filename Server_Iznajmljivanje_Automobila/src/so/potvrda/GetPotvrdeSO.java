@@ -7,6 +7,7 @@ package so.potvrda;
 
 import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
+import domen.TerminVoznje;
 import java.util.ArrayList;
 import java.util.List;
 import repository.impl.RepositoryPotvrda;
@@ -18,9 +19,7 @@ import so.AbstractSO;
  */
 public class GetPotvrdeSO extends AbstractSO {
 
-    private List<OpstiDomenskiObjekat> listaPotvrda;
-
-    
+    private List<OpstiDomenskiObjekat> potvrde = new ArrayList<>();
 
     @Override
     protected void precondition(Object param) throws Exception {
@@ -32,18 +31,32 @@ public class GetPotvrdeSO extends AbstractSO {
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-        listaPotvrda =  brokerBaze.vratiSve((OpstiDomenskiObjekat)param);
-        
-     
-        // vratim sve potvrde
-        // vratim termin na osnovu idja
-        //  prodjem kroz potvrde i napunim termine u potvrdu ako su im idjevi isti!
-        
+
+        List<OpstiDomenskiObjekat> listaPotvrda = brokerBaze.vratiSve((OpstiDomenskiObjekat) param);
+        PotvrdaOIznajmljivanju potvrda;
+        TerminVoznje termin;
+
+        List<OpstiDomenskiObjekat> listaTermina = brokerBaze.vratiSve(new TerminVoznje());
+
+        for (OpstiDomenskiObjekat opstiDomenskiObjekat : listaPotvrda) {
+            potvrda = (PotvrdaOIznajmljivanju) opstiDomenskiObjekat;
+            ArrayList<TerminVoznje> termini = new ArrayList<>();
+
+            for (OpstiDomenskiObjekat opstiDomenskiObjekat1 : listaTermina) {
+                termin = (TerminVoznje) opstiDomenskiObjekat1;
+                if (potvrda.getPotvrdaID() == termin.getPotvrda().getPotvrdaID()) {
+                    termini.add(termin);
+                }
+            }
+            potvrda.setTermini(termini);
+            potvrde.add(potvrda);
+
+        }
+
     }
 
     public List<OpstiDomenskiObjekat> getListaPotvrda() {
-        return listaPotvrda;
+        return potvrde;
     }
 
-   
 }

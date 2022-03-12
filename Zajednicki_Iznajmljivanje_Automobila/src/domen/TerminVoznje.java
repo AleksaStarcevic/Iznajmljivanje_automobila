@@ -114,7 +114,7 @@ public class TerminVoznje implements Serializable, OpstiDomenskiObjekat {
 
     @Override
     public String vratiUslovZaNadjiSlog() {
-        return " tr.potvrdaID=" + potvrda.getPotvrdaID();
+        return " potvrdaID=" + potvrda.getPotvrdaID();
     }
 
     @Override
@@ -184,7 +184,6 @@ public class TerminVoznje implements Serializable, OpstiDomenskiObjekat {
         while (rsT.next()) {
 
             PotvrdaOIznajmljivanju potvrda = new PotvrdaOIznajmljivanju();
-//            ArrayList<TerminVoznje> termini = new ArrayList<>();
 
             potvrda.setPotvrdaID(rsT.getInt("potvrdaID"));
             potvrda.setDatumOD(rsT.getDate("datumOD"));
@@ -216,14 +215,13 @@ public class TerminVoznje implements Serializable, OpstiDomenskiObjekat {
             potvrda.setAutomobil(automobil);
             potvrda.setVozac(vozac);
             potvrda.setKorisnik(korisnik);
-            //////////////////////////////////////////////////////////////////////////////////////////
+         
 
             TerminVoznje termin = new TerminVoznje();
             termin.setPotvrda(potvrda);
             termin.setRedniBroj(rsT.getInt("redniBroj"));
             termin.setDan(rsT.getDate("dan"));
             termin.setVreme(rsT.getString("vreme"));
-//            termini.add(termin);
             lista.add(termin);
         }
         return lista;

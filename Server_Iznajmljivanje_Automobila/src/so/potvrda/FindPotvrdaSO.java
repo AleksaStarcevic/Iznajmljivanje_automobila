@@ -9,6 +9,7 @@ import domen.OpstiDomenskiObjekat;
 import domen.PotvrdaOIznajmljivanju;
 import domen.TerminVoznje;
 import java.util.ArrayList;
+import java.util.List;
 import so.AbstractSO;
 
 /**
@@ -35,12 +36,44 @@ public class FindPotvrdaSO extends AbstractSO {
 
     @Override
     protected void executeOperation(Object param) throws Exception {
-       TerminVoznje terminVoznje = new TerminVoznje(); 
-       PotvrdaOIznajmljivanju potv = (PotvrdaOIznajmljivanju) param;
-       terminVoznje.setPotvrda(potv);
-        potvrda = brokerBaze.pronadji(terminVoznje);
-       
-        
+        PotvrdaOIznajmljivanju potv = (PotvrdaOIznajmljivanju) param;
+        List<OpstiDomenskiObjekat> potvrde = vratiListuPotvrda(param);
+        PotvrdaOIznajmljivanju po;
+
+        for (OpstiDomenskiObjekat opstiDomenskiObjekat : potvrde) {
+            po = (PotvrdaOIznajmljivanju) opstiDomenskiObjekat;
+            if (potv.getPotvrdaID() == po.getPotvrdaID()) {
+                potvrda = po;
+            }
+        }
+
+    }
+
+    private List<OpstiDomenskiObjekat> vratiListuPotvrda(Object param) throws Exception {
+        List<OpstiDomenskiObjekat> listaPotvrda = brokerBaze.vratiSve((OpstiDomenskiObjekat) param);
+        PotvrdaOIznajmljivanju potvrda;
+        TerminVoznje termin;
+        List<OpstiDomenskiObjekat> potvrde = new ArrayList<>();
+
+        List<OpstiDomenskiObjekat> listaTermina = brokerBaze.vratiSve(new TerminVoznje());
+
+        for (OpstiDomenskiObjekat opstiDomenskiObjekat : listaPotvrda) {
+            potvrda = (PotvrdaOIznajmljivanju) opstiDomenskiObjekat;
+            ArrayList<TerminVoznje> termini = new ArrayList<>();
+
+            for (OpstiDomenskiObjekat opstiDomenskiObjekat1 : listaTermina) {
+                termin = (TerminVoznje) opstiDomenskiObjekat1;
+                if (potvrda.getPotvrdaID() == termin.getPotvrda().getPotvrdaID()) {
+                    termini.add(termin);
+                }
+            }
+            potvrda.setTermini(termini);
+            potvrde.add(potvrda);
+
+        }
+
+        return potvrde;
+
     }
 
     public OpstiDomenskiObjekat getPotvrda() {

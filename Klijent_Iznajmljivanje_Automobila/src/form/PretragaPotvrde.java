@@ -191,7 +191,7 @@ public class PretragaPotvrde extends javax.swing.JDialog {
         try {
             int id = Integer.parseInt(txtPretrazi.getText());
             potvrdaPretrazena = Kontroler.getInstanca().getPotvrdaByID(id);
-            System.out.println(potvrdaPretrazena);
+            System.out.println("Pretrazena je potvrda"+ potvrdaPretrazena);
             prikaziPotvrdu(potvrdaPretrazena);
             JOptionPane.showMessageDialog(this, "Potvrda je pronadjena!");
         } catch (Exception ex) {
@@ -258,6 +258,9 @@ public class PretragaPotvrde extends javax.swing.JDialog {
     private void popuniTabelu() {
         try {
             List<PotvrdaOIznajmljivanju> potvrde = Kontroler.getInstanca().getPotvrde();
+            for (PotvrdaOIznajmljivanju potvrdaOIznajmljivanju : potvrde) {
+                System.out.println(potvrdaOIznajmljivanju);
+            }
             TableModelPotvrde tmp = new TableModelPotvrde(potvrde);
             tblPotvrde.setModel(tmp);
 
