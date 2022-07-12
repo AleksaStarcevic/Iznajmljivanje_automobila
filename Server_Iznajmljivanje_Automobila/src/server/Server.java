@@ -6,7 +6,7 @@
 package server;
 
 
-import view.FrmMain;
+import forma.FrmMain;
 
 /**
  *

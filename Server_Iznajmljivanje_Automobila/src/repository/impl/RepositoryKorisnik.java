@@ -21,12 +21,9 @@ import repository.db.DbRepository;
  * @author aleks
  */
 public class RepositoryKorisnik implements DbRepository<Korisnik,Integer> {
-//    private List<Korisnik> korisnici;
     private Connection connection;
 
     public RepositoryKorisnik() {
-//        this.korisnici = new ArrayList<>();
-//        korisnici.add(new Korisnik(1, "admin", "admin"));
     }
 
 

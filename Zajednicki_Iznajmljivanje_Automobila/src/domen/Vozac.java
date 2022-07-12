@@ -8,6 +8,7 @@ package domen;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -101,6 +102,10 @@ public class Vozac implements Serializable, OpstiDomenskiObjekat {
         return true;
     }
 
+   
+
+   
+
     @Override
     public String vratiVrednostiAtributa() {
         return vozacID + ", " + (ime == null ? null : "'" + ime + "'") + ", " + (prezime == null ? null : "'" + prezime + "'") + ", " + (email == null ? null : "'" + email + "'") + ", " + (adresa == null ? null : "'" + adresa + "'");
@@ -118,7 +123,7 @@ public class Vozac implements Serializable, OpstiDomenskiObjekat {
 
     @Override
     public String vratiUslovZaNadjiSlog() {
-        return "vozacID=" + vozacID;
+        return "vozacID="+vozacID;
     }
 
     @Override

@@ -23,15 +23,10 @@ import repository.db.DbRepository;
  * @author aleks
  */
 public class RepositoryAutomobil implements DbRepository<Automobil,String> {
-//    private List<Automobil> automobili;
 
     private Connection connection;
 
     public RepositoryAutomobil() {
-//        this.automobili = new ArrayList<>();
-//        automobili.add(new Automobil("BG041KL", "Logan", "Dacia", new TipAutomobila(1, "Sedan")));
-//        automobili.add(new Automobil("BG031KL", "A4", "Audi", new TipAutomobila(1, "Sedan")));
-//        automobili.add(new Automobil("BG567KL", "Golf", "Volkswagen", new TipAutomobila(2, "Hecbek")));
     }
 
  

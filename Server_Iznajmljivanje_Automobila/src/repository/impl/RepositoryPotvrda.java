@@ -26,12 +26,11 @@ import repository.db.DbRepository;
  * @author aleks
  */
 public class RepositoryPotvrda implements DbRepository<PotvrdaOIznajmljivanju, Integer> {
-//    private List<PotvrdaOIznajmljivanju> potvrde;
+
 
     private Connection connection;
 
     public RepositoryPotvrda() {
-//        potvrde = new ArrayList<>();
     }
 
     public void addAll(List<PotvrdaOIznajmljivanju> potvrde) throws SQLException {

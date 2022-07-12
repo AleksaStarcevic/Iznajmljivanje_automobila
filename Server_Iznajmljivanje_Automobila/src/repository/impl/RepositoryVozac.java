@@ -22,14 +22,9 @@ import repository.db.DbRepository;
  * @author aleks
  */
 public class RepositoryVozac implements DbRepository<Vozac,Integer>{
-//    List<Vozac> vozaci;
     private Connection connection;
 
-    public RepositoryVozac() {
-//        vozaci = new ArrayList<>();
-//        vozaci.add(new Vozac(1, "Aleksa", "Star", "alek1@gmail.com", "Volgina"));
-//        vozaci.add(new Vozac(2, "Nikola", "Cvet", "nik7@gmail.com", "Gige"));
-//        vozaci.add(new Vozac(3, "Aleksa", "Visnja", "visn3@gmail.com", "Medak"));
+    public RepositoryVozac() {      
     }
     
     
